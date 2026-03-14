@@ -347,12 +347,18 @@ render();
 </script>
 </div><!-- end dashboard-content -->
 <script>
+var LOG_URL='APPS_SCRIPT_URL';
+function logAccess(email,action){
+  if(LOG_URL==='APPS_SCRIPT_URL')return;
+  try{fetch(LOG_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({email:email,action:action,userAgent:navigator.userAgent})})}catch(e){}
+}
 function authCheck(){
   var e=document.getElementById('auth-email').value.trim().toLowerCase();
   if(e.endsWith('@ocrolus.com')){
     localStorage.setItem('ae-scorer-auth',e);
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('dashboard-content').style.display='block';
+    logAccess(e,'login');
   } else {
     document.getElementById('auth-error').style.display='block';
   }
@@ -362,6 +368,7 @@ function authCheck(){
   if(saved && saved.endsWith('@ocrolus.com')){
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('dashboard-content').style.display='block';
+    logAccess(saved,'return_visit');
   }
 })();
 </script>
