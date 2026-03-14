@@ -1,11 +1,23 @@
 // Google Apps Script — deploy as Web App to log AE Scorecard access
-// Setup:
-// 1. Go to https://script.google.com → New Project
-// 2. Paste this code
-// 3. Click Deploy → New Deployment → Web App
-//    - Execute as: Me
-//    - Who has access: Anyone
-// 4. Copy the Web App URL and paste it into index.html (replace APPS_SCRIPT_URL)
+// The site sends a GET request with query params: email, action, ua
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // If params present, log the access
+  if (e && e.parameter && e.parameter.email) {
+    sheet.appendRow([
+      new Date().toISOString(),
+      e.parameter.email,
+      e.parameter.action || "unknown",
+      e.parameter.ua || ""
+    ]);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({status: "ok"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
 
 function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -14,21 +26,12 @@ function doPost(e) {
   sheet.appendRow([
     new Date().toISOString(),
     data.email,
-    data.action,       // "login" or "return_visit"
+    data.action,
     data.userAgent
   ]);
 
   return ContentService
     .createTextOutput(JSON.stringify({status: "ok"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = sheet.getDataRange().getValues();
-
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
 }
 

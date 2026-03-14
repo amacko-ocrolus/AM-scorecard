@@ -350,7 +350,7 @@ render();
 var LOG_URL='https://script.google.com/a/macros/ocrolus.com/s/AKfycbyw1XptLK0hHrGte3OPVMBWaTPq6ipNfg2UmrofEr3m0Qr4jih9qj4tkjtRFufkZQ-b/exec';
 function logAccess(email,action){
   if(LOG_URL==='APPS_SCRIPT_URL')return;
-  try{fetch(LOG_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({email:email,action:action,userAgent:navigator.userAgent})})}catch(e){}
+  try{var img=new Image();img.src=LOG_URL+'?email='+encodeURIComponent(email)+'&action='+encodeURIComponent(action)+'&ua='+encodeURIComponent(navigator.userAgent)+'&t='+Date.now()}catch(e){}
 }
 function authCheck(){
   var e=document.getElementById('auth-email').value.trim().toLowerCase();
