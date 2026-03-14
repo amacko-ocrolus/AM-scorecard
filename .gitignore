@@ -1,0 +1,7 @@
+.DS_Store
+node_modules/
+Old/
+.claude/
+ae-scorecard-repo.zip
+*.skill
+package-lock.json
