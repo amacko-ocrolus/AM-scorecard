@@ -1,30 +1,16 @@
 import { useState } from "react";
 
 const reps = [
-  { id: "sam", name: "Sam Loomis", title: "Enterprise AE", profile: "Relationship Builder", avg: 7.81, calls: 5 },
-  { id: "kyle", name: "Kyle Swikoski", title: "Dir. Strategic Sales", profile: "Challenger", avg: 8.24, calls: 7 },
-  { id: "charlie", name: "Charlie Allen", title: "Enterprise AE", profile: "Hard Worker", avg: 7.67, calls: 3 }
+  { id: "anjelica", name: "Anjelica Purnell", title: "Account Manager", profile: "", avg: 0, calls: 0 },
+  { id: "noah", name: "Noah Jones", title: "Account Manager", profile: "", avg: 0, calls: 0 },
+  { id: "elizabeth", name: "Elizabeth Spade", title: "Account Manager", profile: "", avg: 0, calls: 0 }
 ];
 
 const calls = [
-  // SAM
-  { id: 1, rep: "sam", title: "HMA X Ocrolus", prospect: "Amy (Consultant)", date: "Tue 3/10", dur: "44m", type: "Demo", stage: "Pricing", s: { r: 8, d: 9, v: 9, a: 9, c: 8, e: 9 }, w: 8.55, tr: 46, m: { M:1,E:1,DC:1,DP:1,IP:1,Ch:1,Co:1 }, str: ["Steph's transparency built trust","Amy volunteered ROI argument","Pricing + follow-up booked on call"], opp: ["Probe partner approval deeper","Ask about competition"], q: "I'll give you a 1-day turn if you use the tool.", url: "https://us-29990.app.gong.io/call?id=244902142835132322" },
-  { id: 2, rep: "sam", title: "Superior Natl Bank POV", prospect: "Bill, Nicole, Denise", date: "Tue 3/10", dur: "25m", type: "POV Check-in", stage: "Testing", s: { r: 7, d: 7, v: 8, a: 7, c: 8, e: 8 }, w: 7.60, tr: 55, m: { M:0,E:0,DC:0,DP:1,IP:1,Ch:1,Co:0 }, str: ["Nicole validated self-employed calcs","Transparent union borrower handling","Multiple participants engaged"], opp: ["Quantify ROI from errors found","Probe AI policy timeline"], q: "The ones I found appeared to be accurate.", url: "https://us-29990.app.gong.io/call?id=967853026113172916" },
-  { id: 3, rep: "sam", title: "Republic Bank", prospect: "Tim, Sonya", date: "Tue 3/10", dur: "54m", type: "First Demo", stage: "Early Eval", s: { r: 7, d: 7, v: 7, a: 6, c: 7, e: 8 }, w: 7.20, tr: 46, m: { M:0,E:0,DC:0,DP:1,IP:1,Ch:0,Co:0 }, str: ["Authentic humor landed well","Steph transparent on unknowns","Processing mgr asked fraud questions"], opp: ["Initiate pricing for $7B bank","Book follow-up live","Probe competition"], q: "I work for a bank. So I think of crazy sh*t.", url: "https://us-29990.app.gong.io/call?id=8048322502833316181" },
-  { id: 4, rep: "sam", title: "Shea Mortgage Demo", prospect: "Kelly, Tim, Matt (CFO)", date: "Tue 3/10", dur: "47m", type: "Demo (2nd)", stage: "Pricing", s: { r: 8, d: 8, v: 8, a: 7, c: 8, e: 9 }, w: 7.85, tr: 50, m: { M:0,E:1,DC:1,DP:1,IP:1,Ch:1,Co:0 }, str: ["Kelly validated product to own CFO","CFO highly engaged on tech","Confident pricing positioning"], opp: ["Create urgency when prospect stalls","Quantify ROI with CFO present"], q: "I vote you keep her. She's good.", url: "https://us-29990.app.gong.io/call?id=1884016992800208423" },
-  { id: 5, rep: "sam", title: "VanDyk Pricing Review", prospect: "Jeanie, Lindsay", date: "Wed 3/11", dur: "14m", type: "Pricing", stage: "Board Approval", s: { r: 8, d: 7, v: 7, a: 9, c: 8, e: 8 }, w: 7.85, tr: 52, m: { M:0,E:0,DC:1,DP:1,IP:0,Ch:1,Co:0 }, str: ["Andrew's close got verbal commit","No sticker shock on $130K","ICE dinner + booth locked"], opp: ["Outline SLA protections proactively","Ask what objections board may raise"], q: "You're front and center.", url: "https://us-29990.app.gong.io/call?id=5284007527972607206" },
-  // KYLE
-  { id: 6, rep: "kyle", title: "Mission Mortgage Demo", prospect: "Multiple stakeholders", date: "Mon 3/9", dur: "61m", type: "Full Demo", stage: "Initial Demo", s: { r: 7, d: 8, v: 8, a: 7, c: 8, e: 8 }, w: 7.75, tr: 48, m: { M:0,E:0,DC:1,DP:1,IP:1,Ch:0,Co:0 }, str: ["Comprehensive 61-min full product demo","Strong Encompass integration positioning","Good SE utilization"], opp: ["ID champion and econ buyer earlier","Quantify business impact during demo"], q: "", url: "https://us-29990.app.gong.io/call?id=5012764401525604158" },
-  { id: 7, rep: "kyle", title: "Gulf Coast Bank POV", prospect: "Multiple stakeholders", date: "Mon 3/9", dur: "56m", type: "Refresher + POV", stage: "POV Setup", s: { r: 8, d: 8, v: 8, a: 8, c: 8, e: 8 }, w: 8.00, tr: 45, m: { M:0,E:0,DC:1,DP:1,IP:1,Ch:1,Co:0 }, str: ["Effective refresher tailored to bank","Smooth demo-to-POV transition","Strong 56-min agenda control"], opp: ["Discuss bank-specific ROI metrics","Probe competitive landscape"], q: "", url: "https://us-29990.app.gong.io/call?id=1018191465795230656" },
-  { id: 8, rep: "kyle", title: "Mortgage Fin Svcs POV", prospect: "Kelly, Susan, Karen", date: "Mon 3/9", dur: "34m", type: "POV Kickoff", stage: "POV Active", s: { r: 9, d: 8, v: 8, a: 9, c: 9, e: 9 }, w: 8.60, tr: 44, m: { M:1,E:0,DC:1,DP:1,IP:1,Ch:1,Co:1 }, str: ["Outstanding rapport — Waymo story, espresso martini promise","Kelly prepped 11 files unprompted — champion activated","Follow-up booked with success criteria shared"], opp: ["Probe budget/economic buyer","Confirm decision timeline post-POV"], q: "Until I test it, I don't believe a damn word you say.", url: "https://us-29990.app.gong.io/call?id=5670717139300812606" },
-  { id: 9, rep: "kyle", title: "HomeBridge NFTYDoor", prospect: "Noel, Frank, Erica", date: "Tue 3/10", dur: "33m", type: "Contract Close", stage: "Closing", s: { r: 9, d: 8, v: 8, a: 10, c: 9, e: 9 }, w: 8.90, tr: 42, m: { M:1,E:1,DC:1,DP:1,IP:1,Ch:1,Co:1 }, str: ["Deal closed on the call — 1yr contract, same-day signature","Navigated NFTYDoor split with perfect context","Planted Optima POS upsell seed for phase 2"], opp: ["Pin exact implementation kickoff date","Share change mgmt resources proactively"], q: "Ocrolus is the giant double-island Viking fridge kitchen.", url: "https://us-29990.app.gong.io/call?id=7311205256574420592" },
-  { id: 10, rep: "kyle", title: "TexasBank Test-Drive", prospect: "Multiple stakeholders", date: "Tue 3/10", dur: "42m", type: "POV Test-Drive", stage: "POV Active", s: { r: 8, d: 8, v: 8, a: 8, c: 8, e: 8 }, w: 8.00, tr: 47, m: { M:0,E:0,DC:1,DP:1,IP:1,Ch:1,Co:0 }, str: ["Structured POV with clear test params","Good SE team selling","Encompass integration as key differentiator"], opp: ["Quantify expected efficiency gains","Probe competitive evaluation"], q: "", url: "https://us-29990.app.gong.io/call?id=564170903269650994" },
-  { id: 11, rep: "kyle", title: "Steadfast Mortgage", prospect: "Multiple stakeholders", date: "Thu 3/12", dur: "60m", type: "Deep Demo", stage: "Active Eval", s: { r: 8, d: 8, v: 9, a: 7, c: 8, e: 8 }, w: 8.00, tr: 48, m: { M:0,E:0,DC:1,DP:1,IP:1,Ch:1,Co:0 }, str: ["60-min demo shows strong engagement","Comprehensive product + conditioning coverage","Good workflow pain discovery"], opp: ["Firmer next steps with date","ID and engage economic buyer"], q: "", url: "https://us-29990.app.gong.io/call?id=6001985602965987747" },
-  { id: 12, rep: "kyle", title: "Mega Capital Proposal", prospect: "Multiple stakeholders", date: "Thu 3/12", dur: "21m", type: "Proposal", stage: "Pricing", s: { r: 8, d: 8, v: 8, a: 9, c: 9, e: 8 }, w: 8.45, tr: 44, m: { M:1,E:1,DC:1,DP:1,IP:1,Ch:1,Co:0 }, str: ["Concise 21-min pricing walkthrough","Clear structure presented","Mutual next steps with timeline"], opp: ["Probe competitive alternatives","Confirm internal approval process"], q: "", url: "https://us-29990.app.gong.io/call?id=6210740012227288150" },
-  // CHARLIE
-  { id: 13, rep: "charlie", title: "WR Exec Debrief Planning", prospect: "Julie & team", date: "Mon 3/9", dur: "49m", type: "Strategy/Planning", stage: "Active Client", s: { r: 7, d: 7, v: 8, a: 7, c: 8, e: 7 }, w: 7.30, tr: 50, m: { M:0,E:0,DC:1,DP:1,IP:1,Ch:1,Co:0 }, str: ["Strategic exec debrief planning shows account depth","Good cross-functional coordination","49-min invested in relationship expansion"], opp: ["Quantify expansion ROI for exec audience","Identify additional stakeholders to involve"], q: "", url: "https://us-29990.app.gong.io/call?id=7846082633042693952" },
-  { id: 14, rep: "charlie", title: "NH Mutual Demo (Encompass)", prospect: "Multiple stakeholders", date: "Mon 3/9", dur: "64m", type: "Full Demo", stage: "Initial Demo", s: { r: 7, d: 8, v: 8, a: 7, c: 7, e: 8 }, w: 7.60, tr: 52, m: { M:0,E:0,DC:1,DP:1,IP:1,Ch:0,Co:0 }, str: ["Thorough 64-min Encompass demo","Covered full product suite","Strong prospect question engagement"], opp: ["64 min is long — tighten to 45","Build champion explicitly","Probe competition and timeline"], q: "", url: "https://us-29990.app.gong.io/call?id=6974865037967602683" },
-  { id: 15, rep: "charlie", title: "LendSure ROI Sync", prospect: "Multiple stakeholders", date: "Tue 3/10", dur: "35m", type: "ROI Review", stage: "ROI/Expansion", s: { r: 8, d: 8, v: 8, a: 8, c: 8, e: 8 }, w: 8.10, tr: 48, m: { M:1,E:0,DC:1,DP:1,IP:1,Ch:1,Co:0 }, str: ["ROI-focused conversation — metrics driven","35 min well-structured review","Existing client expansion opportunity"], opp: ["Identify economic buyer for expansion","Probe competitive alternatives for upsell"], q: "", url: "https://us-29990.app.gong.io/call?id=9121896233413914421" },
+  // Calls will be populated weekly by the automated scoring pipeline (score.js)
+  // ANJELICA
+  // NOAH
+  // ELIZABETH
 ];
 
 const D = ["r","d","v","a","c","e"];
@@ -34,15 +20,15 @@ const MK = ["M","E","DC","DP","IP","Ch","Co"];
 const ML = { M:"Metrics",E:"Econ Buyer",DC:"Decision Criteria",DP:"Decision Process",IP:"Identify Pain",Ch:"Champion",Co:"Competition" };
 
 const coaching = {
-  sam: { keep: "Team selling with Steph. Transparency on limitations. Natural humor.", start: "Quantify ROI every call (Metrics 1/5). Probe competition (1/5). Book meetings live.", stop: "Letting prospects control follow-up pace." },
-  kyle: { keep: "Exceptional deal control — HomeBridge closed same day. POV success criteria shared upfront. Strong rapport.", start: "Probe competition more (1/7). ID economic buyer earlier. Quantify ROI in first meetings.", stop: "60+ min demos without time checks." },
-  charlie: { keep: "ROI-focused approach on LendSure call. Thorough product coverage in demos. Good account depth.", start: "Tighten demos to 45 min max. Build champions explicitly. Probe competition in every call.", stop: "Running 64-min demos without interactivity checkpoints." }
+  anjelica: { keep: "", start: "", stop: "" },
+  noah: { keep: "", start: "", stop: "" },
+  elizabeth: { keep: "", start: "", stop: "" }
 };
 
 function B({s}){const bg=s>=8?"#10b981":s>=7?"#f59e0b":"#ef4444";return<div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:90,height:4,background:"#1e293b",borderRadius:2,overflow:"hidden"}}><div style={{width:`${s*10}%`,height:"100%",background:bg,borderRadius:2}}/></div><span style={{fontSize:11,fontWeight:600,color:bg,minWidth:20}}>{s}</span></div>}
 
 export default function App(){
-  const[rep,setRep]=useState("sam");
+  const[rep,setRep]=useState("anjelica");
   const[sel,setSel]=useState(null);
   const[view,setView]=useState("overview");
   const f=calls.filter(c=>c.rep===rep);

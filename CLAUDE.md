@@ -1,8 +1,8 @@
-# AE Scorecard — Project Context
+# AM Scorecard — Project Context
 
 ## What This Is
 
-This repo contains the weekly Ocrolus AE (Account Executive) sales call scorecard — an HTML dashboard hosted via GitHub Pages at `index.html`. It displays scored Gong sales calls for four reps, with per-call breakdowns, coaching notes, MEDDPICC coverage, and cross-rep comparisons.
+This repo contains the weekly Ocrolus AM (Account Manager) sales call scorecard — an HTML dashboard hosted via GitHub Pages at `index.html`. It displays scored Gong sales calls for three reps, with per-call breakdowns, coaching notes, MEDDPICC coverage, and cross-rep comparisons.
 
 The scorecard is updated weekly (typically Sundays) and shared with sales leadership via a permanent Google Drive URL and Slack.
 
@@ -10,10 +10,9 @@ The scorecard is updated weekly (typically Sundays) and shared with sales leader
 
 | Rep | Title | Gong User ID |
 |-----|-------|-------------|
-| Sam Loomis | Enterprise AE | 4650582472500753433 |
-| Kyle Swikoski | Director, Strategic Sales & Partnerships | 9148979612777403937 |
-| Charlie Allen | Enterprise AE | 5653125606847862163 |
-| Spencer Sobczak | AE | 1407227189165675721 |
+| Anjelica Purnell | Account Manager | REPLACE_WITH_GONG_ID |
+| Noah Jones | Account Manager | REPLACE_WITH_GONG_ID |
+| Elizabeth Spade | Account Manager | REPLACE_WITH_GONG_ID |
 
 ## Gong API Details
 
@@ -21,7 +20,7 @@ The scorecard is updated weekly (typically Sundays) and shared with sales leader
 - **getCalls** requires explicit workspace ID and date range in ISO 8601 with timezone offset (e.g., `2026-03-09T00:00:00-05:00`)
 - **getCallTranscripts** must be fetched one call at a time: `filter: { callIds: ["<single_id>"] }` (bulk fetches exceed size limits)
 - Filter defaults: `scope = "External"`, `direction = "Conference"`, `duration > 600` seconds
-- Users endpoint paginates at 100 per page; all four reps are known IDs above
+- Users endpoint paginates at 100 per page; all three reps are known IDs above
 
 ## Scoring Framework (v9)
 

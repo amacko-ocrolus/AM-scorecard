@@ -3,7 +3,7 @@
  * Weekly AE Call Scorecard - Automated Pipeline
  * 
  * Runs every Sunday at 2 PM ET via GitHub Actions.
- * 1. Pulls last 7 days of Gong calls for 4 reps
+ * 1. Pulls last 7 days of Gong calls for 3 reps
  * 2. Scores each call via Claude API using v7 methodology
  * 3. Generates interactive HTML dashboard (index.html)
  * 4. Sends Slack message to Sales Leadership
@@ -22,10 +22,9 @@ const http = require("http");
 // ─── Configuration ───────────────────────────────────────────────────────────
 
 const REPS = [
-  { name: "Sam Loomis", title: "Enterprise AE", gongId: "4650582472500753433" },
-  { name: "Kyle Swikoski", title: "Dir. Strategic Sales", gongId: "9148979612777403937" },
-  { name: "Charlie Allen", title: "Enterprise AE", gongId: "5653125606847862163" },
-  { name: "Spencer Sobczak", title: "Account Executive", gongId: "1407227189165675721" },
+  { name: "Anjelica Purnell", title: "Account Manager", gongId: "REPLACE_WITH_GONG_ID" },
+  { name: "Noah Jones", title: "Account Manager", gongId: "REPLACE_WITH_GONG_ID" },
+  { name: "Elizabeth Spade", title: "Account Manager", gongId: "REPLACE_WITH_GONG_ID" },
 ];
 
 const WORKSPACE_ID = "509723422617923879";
