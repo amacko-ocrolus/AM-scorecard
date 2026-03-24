@@ -21,9 +21,11 @@ const https = require("https");
 // ─── Configuration ───────────────────────────────────────────────────────────
 
 const REPS = [
-  { name: "Anjelica Purnell", title: "Account Manager", gongId: "REPLACE_WITH_GONG_ID" },
-  { name: "Noah Jones", title: "Account Manager", gongId: "REPLACE_WITH_GONG_ID" },
-  { name: "Elizabeth Spade", title: "Account Manager", gongId: "REPLACE_WITH_GONG_ID" },
+  { name: "Anjelica Purnell", title: "Account Manager", gongId: "7521307078149635406" },
+  { name: "Noah Jones", title: "Account Manager", gongId: "8357687250089071625" },
+  { name: "Elizabeth Spade", title: "Account Manager", gongId: "1260140667797651866" },
+  { name: "Madeline Mazzella", title: "Account Manager", gongId: "926479123958068574" },
+  { name: "Spencer Schultz", title: "Account Manager", gongId: "7188235930408947059" },
 ];
 
 const WORKSPACE_ID = "509723422617923879";
