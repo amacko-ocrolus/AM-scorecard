@@ -6,7 +6,7 @@
 ### New: AM-Oriented Scoring Framework
 - Replaced AE sales frameworks (MEDDPICC, Gap Selling, Challenger Sale, Voss) with AM client relationship framework
 - Two-layer scoring: binary Four Pillars tracking + scored dimensions (1-10)
-- Three Key Areas (Retention, Expansion, Evangelism) tagged per call
+- Three Key Areas (Retention, Expansion, Advocacy) tagged per call
 
 ### New: Four Pillars of Success (Binary per Call)
 - **Key Decision Maker (KDM)** — Was the call held with someone who has authority?
@@ -26,7 +26,7 @@
 ### New: Three Key Areas (Tags per Call)
 - **Retention** (green) — validated client health, confirmed value realization
 - **Expansion** (blue) — identified upsell/cross-sell, explored new use cases
-- **Evangelism** (purple) — cultivated advocacy, references, case studies
+- **Advocacy** (purple) — cultivated advocacy, references, case studies
 
 ### New: AM Profile Classification
 - Trusted Advisor, Relationship Builder, Problem Solver, Account Grower, Caretaker
@@ -48,7 +48,7 @@
 
 ### Changed: Dashboard
 - Header: "AE Scorer v9" → "AM Scorecard v1"
-- Subtitle references: Retention · Expansion · Evangelism
+- Subtitle references: Retention · Expansion · Advocacy
 - MEDDPICC view → Pillars view (4-row heatmap)
 - Call cards show Key Area tags (colored badges)
 - Compare view updated for new dimensions
@@ -57,7 +57,7 @@
 ### Changed: DOCX Report
 - Replaced MEDDPICC/Challenger/Gap Selling/Voss lens tables with:
   - Four Pillars Coverage Table
-  - Key Areas Assessment (Retention/Expansion/Evangelism)
+  - Key Areas Assessment (Retention/Expansion/Advocacy)
   - AM Profile Classification
 - Updated scoring dimensions in call-by-call table
 - Updated appendix methodology

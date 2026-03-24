@@ -70,7 +70,7 @@ Each call is tagged with which areas were actively advanced:
 |------|-------|------------------------|
 | Retention | Green | AM validated client health, addressed concerns, confirmed value realization, strengthened relationship |
 | Expansion | Blue | AM identified upsell/cross-sell opportunities, explored new use cases, discussed volume growth |
-| Evangelism | Purple | AM cultivated advocacy — references, case studies, peer introductions, event participation |
+| Advocacy | Purple | AM cultivated advocacy — references, case studies, peer introductions, event participation |
 
 ### AM Profile Classification
 
@@ -123,7 +123,7 @@ The processor extracts: opening/middle/closing segments, speaker talk ratios, AM
 - Header with version, date range, and rep count
 - Per-rep cards with scored calls, dimension breakdowns, coaching notes
 - Four Pillars coverage heatmaps (color-coded: green/gray)
-- Key Area tags per call (Retention/Expansion/Evangelism)
+- Key Area tags per call (Retention/Expansion/Advocacy)
 - Cross-rep comparison and team-level insights
 - Footer with rubric version and dimension weights
 

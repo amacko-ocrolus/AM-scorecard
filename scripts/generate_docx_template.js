@@ -11,7 +11,7 @@
  * v1: AM Scorecard framework
  * - Four Pillars of Success (KDM, CS, AV, PR) — binary per call
  * - Five Scoring Dimensions (RQ, CD, VD, SA, CE) — 1-10 scale
- * - Three Key Areas (Retention, Expansion, Evangelism)
+ * - Three Key Areas (Retention, Expansion, Advocacy)
  * - AM Profile Classification
  * - Per-call dimension notes with coaching examples
  *
@@ -64,7 +64,7 @@ function pillarColor(covered) {
 function areaColor(area) {
   if (area === "Retention") return C.green;
   if (area === "Expansion") return "B4D7FF"; // light blue
-  return "E8D5F5"; // light purple for Evangelism
+  return "E8D5F5"; // light purple for Advocacy
 }
 
 // Header cell (blue bg, white text)
@@ -506,7 +506,7 @@ function buildRepSection(rep, listIdx) {
   const areas = [
     { name: "Retention", key: "retention" },
     { name: "Expansion", key: "expansion" },
-    { name: "Evangelism", key: "evangelism" },
+    { name: "Advocacy", key: "evangelism" },
   ];
   kids.push(new Table({
     width: { size: TABLE_W, type: WidthType.DXA },
@@ -676,7 +676,7 @@ function buildAppendix() {
     h2("Four Pillars of Success"),
     body("The Four Pillars track whether key topics were addressed on each call: Key Decision Maker (KDM), Client Success (CS), Additional Value (AV), and Product Roadmap (PR). Each is binary (covered/not covered) per call."),
     h2("Three Key Areas"),
-    body("Each call is tagged with the areas actively advanced: Retention (client health, value realization), Expansion (upsell/cross-sell, new use cases), and Evangelism (advocacy, references, case studies)."),
+    body("Each call is tagged with the areas actively advanced: Retention (client health, value realization), Expansion (upsell/cross-sell, new use cases), and Advocacy (advocacy, references, case studies)."),
     h2("AM Profile Classification"),
     body("Each AM is classified based on their overall pattern: Trusted Advisor, Relationship Builder, Problem Solver, Account Grower, or Caretaker."),
   ];
