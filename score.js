@@ -156,7 +156,7 @@ async function getCalls(fromDate, toDate) {
   let allCalls = [];
   let cursor = "";
   do {
-    const result = await gongRequest("/calls", {
+    const result = await gongRequest("/calls/extensive", {
       filter: {
         fromDateTime: fromDate,
         toDateTime: toDate,
