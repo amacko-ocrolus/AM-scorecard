@@ -201,8 +201,8 @@ const doc = new Document({
 
         // === KEY LINKS ===
         heading("2. Key Links & Access", HeadingLevel.HEADING_1),
-        linkPara("Live Dashboard", "https://vdua-ocrolus.github.io/AE-scorecard/"),
-        linkPara("GitHub Repo", "https://github.com/vdua-ocrolus/AE-Scorecard"),
+        linkPara("Live Dashboard", "https://amacko-ocrolus.github.io/AM-scorecard/"),
+        linkPara("GitHub Repo", "https://github.com/amacko-ocrolus/AM-scorecard"),
         linkPara("Access Log (Google Sheet)", "https://docs.google.com/spreadsheets/d/1npiJimPNf7iwfB7bYtbuQImvRo8TBToGADwfm0TmWFU/edit"),
         para(""),
         para("Dashboard Access: Users must enter an @ocrolus.com email to view the dashboard. Access events (logins, return visits) are logged to the Google Sheet above via a Google Apps Script webhook.", { italic: true }),
