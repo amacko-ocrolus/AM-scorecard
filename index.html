@@ -80,71 +80,19 @@ th,td{padding:4px 5px;font-size:10px;white-space:nowrap}
 </div>
 <div id="app"></div>
 <script>
-const reps=[
-{id:"anjelica",name:"Anjelica Purnell",title:"Account Manager",profile:"",avg:0,n:0},
-{id:"noah",name:"Noah Jones",title:"Account Manager",profile:"",avg:0,n:0},
-{id:"elizabeth",name:"Elizabeth Spade",title:"Account Manager",profile:"",avg:0,n:0},
-{id:"madeline",name:"Madeline Mazzella",title:"Account Manager",profile:"",avg:0,n:0},
-{id:"spencer",name:"Spencer Schultz",title:"Account Manager",profile:"",avg:0,n:0}
-];
+const reps=[{"id":"anjelica","name":"Anjelica Purnell","title":"Account Manager","profile":"","avg":0,"n":0},{"id":"noah","name":"Noah Jones","title":"Account Manager","profile":"","avg":0,"n":0},{"id":"elizabeth","name":"Elizabeth Spade","title":"Account Manager","profile":"","avg":0,"n":0},{"id":"madeline","name":"Madeline Mazzella","title":"Account Manager","profile":"","avg":0,"n":0},{"id":"spencer","name":"Spencer Schultz","title":"Account Manager","profile":"","avg":0,"n":0}];
 const PK=["KDM","CS","AV","PR"];
 const PL={KDM:"Key Decision Maker",CS:"Client Success",AV:"Additional Value",PR:"Product Roadmap"};
 const DK=["rq","cd","vd","sa","ce"];
 const DL={rq:"Relationship Quality",cd:"Client Discovery",vd:"Value Delivery",sa:"Strategic Advancement",ce:"Client Engagement"};
 const DW={rq:"20%",cd:"25%",vd:"25%",sa:"20%",ce:"10%"};
-const calls=[
-// Calls will be populated weekly by the automated scoring pipeline (score.js)
-// ANJELICA
-// NOAH
-// ELIZABETH
-// MADELINE
-// SPENCER
-// Placeholder — remove this comment once first week of data is loaded
-{id:0,rep:"anjelica",title:"No calls yet",prospect:"",date:"",dur:"0m",type:"",s:{rq:0,cd:0,vd:0,sa:0,ce:0},w:0,tr:0,p:{KDM:0,CS:0,AV:0,PR:0},keyAreas:[],str:[],opp:[],q:"",coach:"",prep:[],url:""},
-// DELETE THE ABOVE LINE WHEN FIRST REAL CALLS ARE ADDED
-];
+const calls=[];
 
-const coaching={
-anjelica:{
-narrative:"Coaching notes will be populated weekly by the automated scoring pipeline.",
-keep:"",
-start:"",
-stop:"",
-pillarCoaching:""
-},
-noah:{
-narrative:"Coaching notes will be populated weekly by the automated scoring pipeline.",
-keep:"",
-start:"",
-stop:"",
-pillarCoaching:""
-},
-elizabeth:{
-narrative:"Coaching notes will be populated weekly by the automated scoring pipeline.",
-keep:"",
-start:"",
-stop:"",
-pillarCoaching:""
-},
-madeline:{
-narrative:"Coaching notes will be populated weekly by the automated scoring pipeline.",
-keep:"",
-start:"",
-stop:"",
-pillarCoaching:""
-},
-spencer:{
-narrative:"Coaching notes will be populated weekly by the automated scoring pipeline.",
-keep:"",
-start:"",
-stop:"",
-pillarCoaching:""
-}
-};
+const coaching={"anjelica":{"narrative":"Anjelica Purnell had 0 qualifying calls this week.","keep":"No data this week.","start":"No data this week.","stop":"Review needed.","pillarCoaching":""},"noah":{"narrative":"Noah Jones had 0 qualifying calls this week.","keep":"No data this week.","start":"No data this week.","stop":"Review needed.","pillarCoaching":""},"elizabeth":{"narrative":"Elizabeth Spade had 0 qualifying calls this week.","keep":"No data this week.","start":"No data this week.","stop":"Review needed.","pillarCoaching":""},"madeline":{"narrative":"Madeline Mazzella had 0 qualifying calls this week.","keep":"No data this week.","start":"No data this week.","stop":"Review needed.","pillarCoaching":""},"spencer":{"narrative":"Spencer Schultz had 0 qualifying calls this week.","keep":"No data this week.","start":"No data this week.","stop":"Review needed.","pillarCoaching":""}};
 
 // History data — populated weekly by automation. Each entry is one week's snapshot.
 // After 3+ entries, the history tab becomes active.
-const history=[];
+const history=[{"weekOf":"Week of Mar 17–24, 2026","reps":[{"id":"anjelica","avg":0,"n":0,"scores":{"rq":0,"cd":0,"vd":0,"sa":0,"ce":0},"coaching":{"keep":"No data this week.","start":"No data this week.","stop":"Review needed."}},{"id":"noah","avg":0,"n":0,"scores":{"rq":0,"cd":0,"vd":0,"sa":0,"ce":0},"coaching":{"keep":"No data this week.","start":"No data this week.","stop":"Review needed."}},{"id":"elizabeth","avg":0,"n":0,"scores":{"rq":0,"cd":0,"vd":0,"sa":0,"ce":0},"coaching":{"keep":"No data this week.","start":"No data this week.","stop":"Review needed."}},{"id":"madeline","avg":0,"n":0,"scores":{"rq":0,"cd":0,"vd":0,"sa":0,"ce":0},"coaching":{"keep":"No data this week.","start":"No data this week.","stop":"Review needed."}},{"id":"spencer","avg":0,"n":0,"scores":{"rq":0,"cd":0,"vd":0,"sa":0,"ce":0},"coaching":{"keep":"No data this week.","start":"No data this week.","stop":"Review needed."}}]}];
 
 let st={rep:"anjelica",sel:null,view:"overview"};
 function sc(s){return s>=8.5?"#10b981":s>=7.5?"#3b82f6":"#f59e0b"}
