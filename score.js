@@ -158,7 +158,7 @@ async function getCalls(fromDate, toDate) {
   do {
     const body = { filter: { fromDateTime: fromDate, toDateTime: toDate, workspaceId: WORKSPACE_ID } };
     if (cursor) body.cursor = cursor;
-    const result = await gongRequest("/calls", body);
+    const result = await gongRequest("/calls/extensive", body);
     const batch = result.calls || [];
     allCalls = allCalls.concat(batch);
     cursor = result.records?.cursor || "";
