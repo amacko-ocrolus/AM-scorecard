@@ -64,7 +64,7 @@ th,td{padding:4px 5px;font-size:10px;white-space:nowrap}
 <!-- Email Gate -->
 <div id="auth-gate" style="display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column">
 <div style="background:#111827;border:1px solid #1e293b;border-radius:12px;padding:40px;max-width:380px;width:100%;text-align:center">
-<div class="mono" style="font-size:10px;color:#475569;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Ocrolus · AE Scorer v9</div>
+<div class="mono" style="font-size:10px;color:#475569;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Ocrolus · AM Scorecard v1</div>
 <h2 style="font-size:18px;font-weight:600;margin-bottom:4px">Weekly Call Scorecard</h2>
 <p style="font-size:12px;color:#64748b;margin-bottom:24px">Enter your Ocrolus email to continue</p>
 <input id="auth-email" type="email" placeholder="you@ocrolus.com" style="width:100%;padding:10px 14px;border-radius:6px;border:1px solid #334155;background:#0a0f1a;color:#e2e8f0;font-family:'IBM Plex Sans',sans-serif;font-size:13px;outline:none;margin-bottom:12px" onkeydown="if(event.key==='Enter')authCheck()">
@@ -74,9 +74,9 @@ th,td{padding:4px 5px;font-size:10px;white-space:nowrap}
 </div>
 <div id="dashboard-content" style="display:none">
 <div style="margin-bottom:20px">
-<div class="mono" style="font-size:10px;color:#475569;letter-spacing:2px;text-transform:uppercase">Ocrolus · AE Scorer v9</div>
+<div class="mono" style="font-size:10px;color:#475569;letter-spacing:2px;text-transform:uppercase">Ocrolus · AM Scorecard v1</div>
 <h1 style="font-size:22px;font-weight:700;margin:4px 0 0">Weekly Call Scorecard</h1>
-<div style="font-size:11px;color:#475569;margin-top:2px">Week of Mar 16–20, 2026 · 3 reps · 0 calls · MEDDPICC · Gap Selling · Challenger · Never Split the Difference</div>
+<div style="font-size:11px;color:#475569;margin-top:2px">Week of Mar 16–20, 2026 · 3 reps · 0 calls · Retention · Expansion · Evangelism</div>
 </div>
 <div id="app"></div>
 <script>
@@ -85,18 +85,18 @@ const reps=[
 {id:"noah",name:"Noah Jones",title:"Account Manager",profile:"",avg:0,n:0},
 {id:"elizabeth",name:"Elizabeth Spade",title:"Account Manager",profile:"",avg:0,n:0}
 ];
-const MK=["M","E","DC","DP","IP","Ch","Co"];
-const ML={M:"Metrics",E:"Econ Buyer",DC:"Decision Criteria",DP:"Decision Process",IP:"Identify Pain",Ch:"Champion",Co:"Competition"};
-const DK=["r","d","v","a","c","e"];
-const DL={r:"Rapport",d:"Discovery",v:"Value",a:"Advancement",c:"Control",e:"Engagement"};
-const DW={r:"10%",d:"30%",v:"15%",a:"20%",c:"10%",e:"15%"};
+const PK=["KDM","CS","AV","PR"];
+const PL={KDM:"Key Decision Maker",CS:"Client Success",AV:"Additional Value",PR:"Product Roadmap"};
+const DK=["rq","cd","vd","sa","ce"];
+const DL={rq:"Relationship Quality",cd:"Client Discovery",vd:"Value Delivery",sa:"Strategic Advancement",ce:"Client Engagement"};
+const DW={rq:"20%",cd:"25%",vd:"25%",sa:"20%",ce:"10%"};
 const calls=[
 // Calls will be populated weekly by the automated scoring pipeline (score.js)
 // ANJELICA
 // NOAH
 // ELIZABETH
 // Placeholder — remove this comment once first week of data is loaded
-{id:0,rep:"anjelica",title:"No calls yet",prospect:"",date:"",dur:"0m",type:"",stage:"",s:{r:0,d:0,v:0,a:0,c:0,e:0},w:0,tr:0,m:{M:0,E:0,DC:0,DP:0,IP:0,Ch:0,Co:0},str:[],opp:[],q:"",coach:"",prep:[],url:""},
+{id:0,rep:"anjelica",title:"No calls yet",prospect:"",date:"",dur:"0m",type:"",s:{rq:0,cd:0,vd:0,sa:0,ce:0},w:0,tr:0,p:{KDM:0,CS:0,AV:0,PR:0},keyAreas:[],str:[],opp:[],q:"",coach:"",prep:[],url:""},
 // DELETE THE ABOVE LINE WHEN FIRST REAL CALLS ARE ADDED
 ];
 
@@ -106,21 +106,21 @@ narrative:"Coaching notes will be populated weekly by the automated scoring pipe
 keep:"",
 start:"",
 stop:"",
-frameworkCoaching:""
+pillarCoaching:""
 },
 noah:{
 narrative:"Coaching notes will be populated weekly by the automated scoring pipeline.",
 keep:"",
 start:"",
 stop:"",
-frameworkCoaching:""
+pillarCoaching:""
 },
 elizabeth:{
 narrative:"Coaching notes will be populated weekly by the automated scoring pipeline.",
 keep:"",
 start:"",
 stop:"",
-frameworkCoaching:""
+pillarCoaching:""
 }
 };
 
@@ -149,7 +149,7 @@ h+=`</div>`;
 
 // View tabs
 h+=`<div style="display:flex;gap:6px;margin-bottom:14px">`;
-["overview","meddpicc","compare","history"].forEach(v=>{
+["overview","pillars","compare","history"].forEach(v=>{
 h+=`<button class="vtab mono ${st.view===v?"active":""}" onclick="st.view='${v}';st.sel=null;render()">${v}</button>`;
 });
 h+=`</div>`;
@@ -167,7 +167,7 @@ if(st.view==="compare"&&!det){
 h+=`<div class="card" style="overflow-x:auto"><div class="mono" style="font-size:11px;font-weight:600;color:#93c5fd;margin-bottom:12px;letter-spacing:1px">REP COMPARISON</div><table><thead><tr><th>Metric</th>`;
 reps.forEach(r=>{h+=`<th style="text-align:center">${r.name.split(" ")[0]}</th>`});
 h+=`</tr></thead><tbody>`;
-[{l:"Avg Score",f:r=>r.avg},{l:"Calls",f:r=>r.n},{l:"Profile",f:r=>r.profile},{l:"MEDDPICC %",f:r=>{const rc=calls.filter(c=>c.rep===r.id);const t=rc.length*7;const h2=rc.reduce((s,c)=>s+MK.filter(k=>c.m[k]).length,0);return Math.round(h2/t*100)+"%"}}].forEach(row=>{
+[{l:"Avg Score",f:r=>r.avg},{l:"Calls",f:r=>r.n},{l:"Profile",f:r=>r.profile},{l:"Pillars %",f:r=>{const rc=calls.filter(c=>c.rep===r.id);const t=rc.length*4;const h2=rc.reduce((s,c)=>s+PK.filter(k=>c.p[k]).length,0);return t?Math.round(h2/t*100)+"%":"0%"}}].forEach(row=>{
 h+=`<tr><td style="color:#94a3b8">${row.l}</td>`;
 reps.forEach(r=>{const v=row.f(r);h+=`<td style="text-align:center;font-weight:${typeof v==="number"?700:400};color:${typeof v==="number"?sc(v):"#94a3b8"}">${v}</td>`});
 h+=`</tr>`;
@@ -195,32 +195,34 @@ h+=`<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:600;c
 h+=`<div><div style="font-size:10px;font-weight:600;color:#ef4444;margin-bottom:6px;letter-spacing:0.5px">■ STOP DOING</div><div style="font-size:12px;color:#94a3b8;line-height:1.7;padding-left:10px;border-left:2px solid rgba(239,68,68,0.3)">${co.stop}</div></div>`;
 h+=`</div>`;
 // Framework Coaching (combined)
-if(co.frameworkCoaching){
-h+=`<div class="card" style="margin-bottom:14px;border-left:3px solid #8b5cf6"><div class="mono" style="font-size:10px;font-weight:600;color:#8b5cf6;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase">Framework Coaching: ${rd.name}</div>`;
-h+=`<div style="font-size:12px;color:#94a3b8;line-height:1.8">${co.frameworkCoaching}</div>`;
+if(co.pillarCoaching){
+h+=`<div class="card" style="margin-bottom:14px;border-left:3px solid #8b5cf6"><div class="mono" style="font-size:10px;font-weight:600;color:#8b5cf6;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase">Pillar Coaching: ${rd.name}</div>`;
+h+=`<div style="font-size:12px;color:#94a3b8;line-height:1.8">${co.pillarCoaching}</div>`;
 h+=`</div>`;
 }
 // Call list (below coaching)
 h+=`<div class="mono" style="font-size:10px;font-weight:600;color:#93c5fd;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase">Calls This Week</div>`;
 f.forEach(c=>{
 h+=`<div class="card call-row" style="border-left-color:${sc(c.w)}" onclick="st.sel=${c.id};render()"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><div style="flex:1;min-width:160px"><div style="font-size:13px;font-weight:600">${c.title}</div><div style="font-size:10px;color:#64748b">${c.prospect} · ${c.date} · ${c.dur}</div></div><div style="display:flex;gap:2px" class="dots-wrap">`;
-MK.forEach(k=>{h+=`<span class="dot ${c.m[k]?"dot-on":"dot-off"}"></span>`});
+PK.forEach(k=>{h+=`<span class="dot ${c.p[k]?"dot-on":"dot-off"}"></span>`});
+h+=`</div><div style="display:flex;gap:3px;flex-wrap:wrap">`;
+if(c.keyAreas)c.keyAreas.forEach(a=>{const ac={Retention:"#10b981",Expansion:"#3b82f6",Evangelism:"#8b5cf6"};h+=`<span class="tag" style="background:${ac[a]||"#475569"}22;color:${ac[a]||"#475569"};border:1px solid ${ac[a]||"#475569"}44">${a}</span>`});
 h+=`</div><div style="font-size:18px;font-weight:700;color:${sc(c.w)};min-width:36px;text-align:right">${c.w}</div><div style="color:#475569">›</div></div></div>`;
 });
 }
 
-// ── MEDDPICC VIEW ──
-if(st.view==="meddpicc"&&!det){
-const mf=MK.map(k=>({k,l:ML[k],n:f.filter(c=>c.m[k]).length,f:f.filter(c=>c.m[k]).length>=Math.ceil(f.length*.7)?"Always":f.filter(c=>c.m[k]).length>=Math.ceil(f.length*.3)?"Sometimes":"Rarely"}));
-h+=`<div class="card" style="overflow-x:auto"><div class="mono" style="font-size:10px;font-weight:600;color:#93c5fd;margin-bottom:10px;letter-spacing:1px">MEDDPICC — ${rd.name} (${f.length} calls)</div><table><thead><tr><th>Element</th>`;
+// ── PILLARS VIEW ──
+if(st.view==="pillars"&&!det){
+const pf=PK.map(k=>({k,l:PL[k],n:f.filter(c=>c.p[k]).length,f:f.filter(c=>c.p[k]).length>=Math.ceil(f.length*.7)?"Always":f.filter(c=>c.p[k]).length>=Math.ceil(f.length*.3)?"Sometimes":"Rarely"}));
+h+=`<div class="card" style="overflow-x:auto"><div class="mono" style="font-size:10px;font-weight:600;color:#93c5fd;margin-bottom:10px;letter-spacing:1px">FOUR PILLARS — ${rd.name} (${f.length} calls)</div><table><thead><tr><th>Pillar</th>`;
 f.forEach(c=>{h+=`<th style="text-align:center;font-size:9px;max-width:70px">${c.title.split(" ")[0]}</th>`});
 h+=`<th style="text-align:center">Freq</th></tr></thead><tbody>`;
-mf.forEach(m=>{
-h+=`<tr><td><span class="mono" style="color:#93c5fd;font-size:10px;margin-right:3px">${m.k}</span><span style="color:#94a3b8">${m.l}</span></td>`;
-f.forEach(c=>{h+=`<td style="text-align:center"><div style="width:18px;height:18px;border-radius:3px;margin:0 auto;display:flex;align-items:center;justify-content:center;background:${c.m[m.k]?"rgba(16,185,129,0.15)":"rgba(239,68,68,0.06)"};color:${c.m[m.k]?"#10b981":"#475569"};font-size:11px;font-weight:600">${c.m[m.k]?"✓":"—"}</div></td>`});
-const fc=m.f==="Always"?"#10b981":m.f==="Sometimes"?"#f59e0b":"#ef4444";
-const fb=m.f==="Always"?"rgba(16,185,129,0.15)":m.f==="Sometimes"?"rgba(245,158,11,0.15)":"rgba(239,68,68,0.1)";
-h+=`<td style="text-align:center"><span class="tag mono" style="background:${fb};color:${fc}">${m.f}</span></td></tr>`;
+pf.forEach(p=>{
+h+=`<tr><td><span class="mono" style="color:#93c5fd;font-size:10px;margin-right:3px">${p.k}</span><span style="color:#94a3b8">${p.l}</span></td>`;
+f.forEach(c=>{h+=`<td style="text-align:center"><div style="width:18px;height:18px;border-radius:3px;margin:0 auto;display:flex;align-items:center;justify-content:center;background:${c.p[p.k]?"rgba(16,185,129,0.15)":"rgba(100,116,139,0.06)"};color:${c.p[p.k]?"#10b981":"#475569"};font-size:11px;font-weight:600">${c.p[p.k]?"✓":"—"}</div></td>`});
+const fc=p.f==="Always"?"#10b981":p.f==="Sometimes"?"#f59e0b":"#ef4444";
+const fb=p.f==="Always"?"rgba(16,185,129,0.15)":p.f==="Sometimes"?"rgba(245,158,11,0.15)":"rgba(239,68,68,0.1)";
+h+=`<td style="text-align:center"><span class="tag mono" style="background:${fb};color:${fc}">${p.f}</span></td></tr>`;
 });
 h+=`</tbody></table></div>`;
 }
@@ -285,14 +287,16 @@ h+=`</div>`;
 // ── CALL DETAIL VIEW ──
 if(det){
 h+=`<button class="vtab mono" onclick="st.sel=null;render()" style="margin-bottom:10px">← Back</button>`;
-h+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:14px"><div><h2 style="font-size:16px;font-weight:700"><a href="${det.url}" target="_blank" style="color:#e2e8f0;text-decoration:none;border-bottom:1px solid #3b82f6;padding-bottom:1px;transition:color .15s" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#e2e8f0'">${det.title} ↗</a></h2><div style="font-size:11px;color:#64748b;margin-top:2px">${det.prospect} · ${det.date} · ${det.dur} · ${det.type}</div><div style="font-size:10px;color:#475569">Stage: ${det.stage} · Talk: <span style="color:${det.tr<=60?"#10b981":"#f59e0b"}">${det.tr}%</span></div></div><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:${sc(det.w)}">${det.w}</div><div class="mono" style="font-size:9px;color:#475569">WEIGHTED</div></div></div>`;
+h+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:14px"><div><h2 style="font-size:16px;font-weight:700"><a href="${det.url}" target="_blank" style="color:#e2e8f0;text-decoration:none;border-bottom:1px solid #3b82f6;padding-bottom:1px;transition:color .15s" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#e2e8f0'">${det.title} ↗</a></h2><div style="font-size:11px;color:#64748b;margin-top:2px">${det.prospect} · ${det.date} · ${det.dur} · ${det.type}</div><div style="font-size:10px;color:#475569">Talk: <span style="color:${det.tr<=60?"#10b981":"#f59e0b"}">${det.tr}%</span></div></div><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:${sc(det.w)}">${det.w}</div><div class="mono" style="font-size:9px;color:#475569">WEIGHTED</div></div></div>`;
 DK.forEach(d=>{
 const s=det.s[d];const bg=s>=8?"#10b981":s>=7?"#f59e0b":"#ef4444";
 h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0"><span style="font-size:11px;color:#94a3b8;min-width:110px">${DL[d]} <span style="color:#475569;font-size:9px">(${DW[d]})</span></span><div style="display:flex;align-items:center;gap:6px"><div class="bar"><div class="fill" style="width:${s*10}%;background:${bg}"></div></div><span style="font-size:11px;font-weight:600;color:${bg};min-width:20px">${s}</span></div></div>`;
 });
 h+=`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">`;
-MK.forEach(k=>{h+=`<div class="tag mono" style="background:${det.m[k]?"rgba(16,185,129,0.12)":"rgba(100,116,139,0.06)"};color:${det.m[k]?"#10b981":"#475569"};border:1px solid ${det.m[k]?"rgba(16,185,129,0.25)":"#1e293b"}">${k}</div>`});
-h+=`</div></div>`;
+PK.forEach(k=>{h+=`<div class="tag mono" style="background:${det.p[k]?"rgba(16,185,129,0.12)":"rgba(100,116,139,0.06)"};color:${det.p[k]?"#10b981":"#475569"};border:1px solid ${det.p[k]?"rgba(16,185,129,0.25)":"#1e293b"}">${k} <span style="font-size:8px;font-weight:400">${PL[k]}</span></div>`});
+h+=`</div>`;
+if(det.keyAreas&&det.keyAreas.length){h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:8px">`;const ac={Retention:"#10b981",Expansion:"#3b82f6",Evangelism:"#8b5cf6"};det.keyAreas.forEach(a=>{h+=`<span class="tag" style="background:${ac[a]||"#475569"}22;color:${ac[a]||"#475569"};border:1px solid ${ac[a]||"#475569"}44;font-size:10px">${a}</span>`});h+=`</div>`}
+h+=`</div>`;
 h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0" class="detail-grid">`;
 h+=`<div class="card"><div class="mono" style="font-size:10px;font-weight:600;color:#10b981;margin-bottom:6px">STRENGTHS</div>`;
 det.str.forEach(s=>{h+=`<div class="strength">${s}</div>`});
@@ -305,7 +309,7 @@ if(det.q){h+=`<div class="card"><div class="mono" style="font-size:10px;font-wei
 h+=`<a href="${det.url}" target="_blank" class="mono" style="font-size:10px;display:inline-block;margin-top:8px">View in Gong →</a>`;
 }
 
-h+=`<div style="margin-top:20px;text-align:center;font-size:9px;color:#1e293b" class="mono">v9 rubric · MEDDPICC 30% · Gap Selling 30% · Challenger 25% · NSTD 15% · ${calls.length} calls · 4 reps</div>`;
+h+=`<div style="margin-top:20px;text-align:center;font-size:9px;color:#1e293b" class="mono">AM Scorecard v1 · RQ 20% · CD 25% · VD 25% · SA 20% · CE 10% · ${calls.length} calls · 3 reps</div>`;
 el.innerHTML=h;
 }
 render();
@@ -320,7 +324,7 @@ function logAccess(email,action){
 function authCheck(){
   var e=document.getElementById('auth-email').value.trim().toLowerCase();
   if(e.endsWith('@ocrolus.com')){
-    localStorage.setItem('ae-scorer-auth',e);
+    localStorage.setItem('am-scorecard-auth',e);
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('dashboard-content').style.display='block';
     logAccess(e,'login');
@@ -329,7 +333,7 @@ function authCheck(){
   }
 }
 (function(){
-  var saved=localStorage.getItem('ae-scorer-auth');
+  var saved=localStorage.getItem('am-scorecard-auth');
   if(saved && saved.endsWith('@ocrolus.com')){
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('dashboard-content').style.display='block';

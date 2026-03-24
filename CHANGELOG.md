@@ -1,6 +1,70 @@
-# AE Scorer — Version Changelog
+# AM Scorecard — Version Changelog
 
-## v9 (2026-03-14)
+## AM Scorecard v1 (2026-03-24)
+**Complete transition**: AE Scorer v9 → AM Scorecard v1
+
+### New: AM-Oriented Scoring Framework
+- Replaced AE sales frameworks (MEDDPICC, Gap Selling, Challenger Sale, Voss) with AM client relationship framework
+- Two-layer scoring: binary Four Pillars tracking + scored dimensions (1-10)
+- Three Key Areas (Retention, Expansion, Evangelism) tagged per call
+
+### New: Four Pillars of Success (Binary per Call)
+- **Key Decision Maker (KDM)** — Was the call held with someone who has authority?
+- **Client Success (CS)** — Did we discuss if Ocrolus is helping the client win?
+- **Additional Value (AV)** — Did we explore ways to bring more value?
+- **Product Roadmap (PR)** — Did we discuss Ocrolus product roadmap?
+- Replaces MEDDPICC 7-element heatmap with 4-pillar heatmap
+
+### New: Five Scoring Dimensions (replaces 6 AE dimensions)
+- Relationship Quality (20%) — rapport, trust, multi-threading, stakeholder awareness
+- Client Discovery (25%) — client health, satisfaction, pain points, usage patterns
+- Value Delivery (25%) — ROI validation, ongoing value demonstration, best practice sharing
+- Strategic Advancement (20%) — next steps, expansion signals, roadmap alignment
+- Client Engagement (10%) — client energy, voluntary elaboration, advocacy indicators
+- Weighted formula: (RQ × 0.20) + (CD × 0.25) + (VD × 0.25) + (SA × 0.20) + (CE × 0.10)
+
+### New: Three Key Areas (Tags per Call)
+- **Retention** (green) — validated client health, confirmed value realization
+- **Expansion** (blue) — identified upsell/cross-sell, explored new use cases
+- **Evangelism** (purple) — cultivated advocacy, references, case studies
+
+### New: AM Profile Classification
+- Trusted Advisor, Relationship Builder, Problem Solver, Account Grower, Caretaker
+- Replaces Challenger Sale profiles (Challenger, Relationship Builder, Hard Worker, etc.)
+
+### Changed: Call Scope (inverted from AE)
+- AE v9 excluded existing customer calls — AM Scorecard scores them
+- Focus is on client relationship calls, QBRs, check-ins, expansion discussions
+- Excludes cold outreach, initial prospecting, and new business discovery calls
+
+### Changed: Coaching Voice
+- Retained Keep/Start/Stop format (one high-impact item each)
+- Framework coaching now references AM best practices: relationship depth, value realization, expansion signals, advocacy cultivation
+- Epistemic humility principle retained from v9
+
+### Changed: Transcript Processor
+- Updated keyword detection for AM context: renewal, adoption, roadmap, feature request, case study, reference, ROI, success, expand, rollout
+- Updated signal detection for client engagement indicators
+
+### Changed: Dashboard
+- Header: "AE Scorer v9" → "AM Scorecard v1"
+- Subtitle references: Retention · Expansion · Evangelism
+- MEDDPICC view → Pillars view (4-row heatmap)
+- Call cards show Key Area tags (colored badges)
+- Compare view updated for new dimensions
+- Auth localStorage key updated
+
+### Changed: DOCX Report
+- Replaced MEDDPICC/Challenger/Gap Selling/Voss lens tables with:
+  - Four Pillars Coverage Table
+  - Key Areas Assessment (Retention/Expansion/Evangelism)
+  - AM Profile Classification
+- Updated scoring dimensions in call-by-call table
+- Updated appendix methodology
+
+---
+
+## AE Scorer v9 (2026-03-14)
 **Renamed**: `gong-call-scorer` → `AE-Scorer`
 
 ### New: Prospect-Only Scope

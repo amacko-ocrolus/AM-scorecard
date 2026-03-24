@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Gong Call Evaluation DOCX Generator — Template (v5)
+ * AM Scorecard DOCX Generator — Template (v1)
  *
  * This is a TEMPLATE. When using this skill, Claude should:
  * 1. Copy this file to the working directory
@@ -8,13 +8,12 @@
  * 3. Update the title page metadata (recipient, date, period)
  * 4. Run: node generate_docx.js
  *
- * v5 additions:
- * - Mandatory top-of-report summary (Overall Assessment, What This Means, Best
- *   Examples Observed, Coaching Priority)
- * - Framework Overlays: MEDDPICC (Coverage/Evidence/Example to Improve),
- *   Challenger Lens (Teach/Tailor/Take Control), Gap Selling Lens
- * - Updated scoring table with "What Happened" and "Example" columns
- * - Coaching examples (Observed vs Stronger version) throughout
+ * v1: AM Scorecard framework
+ * - Four Pillars of Success (KDM, CS, AV, PR) — binary per call
+ * - Five Scoring Dimensions (RQ, CD, VD, SA, CE) — 1-10 scale
+ * - Three Key Areas (Retention, Expansion, Evangelism)
+ * - AM Profile Classification
+ * - Per-call dimension notes with coaching examples
  *
  * Dependencies: npm install docx
  */
@@ -54,31 +53,18 @@ const cellMargins = { top: 80, bottom: 80, left: 120, right: 120 };
 const TABLE_W = 9360;
 
 function scoreColor(score) {
-  if (score >= 8) return C.green;
-  if (score >= 5) return C.yellow;
-  return C.red;
+  if (score >= 8.5) return C.green;
+  if (score >= 7.5) return "B4D7FF"; // blue
+  return C.yellow;
 }
 
-function freqColor(f) {
-  return f === "Always" ? C.green : f === "Sometimes" ? C.yellow : C.red;
+function pillarColor(covered) {
+  return covered ? C.green : C.red;
 }
-
-function coverageColor(c) {
-  if (c === "Strongly covered") return C.green;
-  if (c === "Touched but shallow") return C.yellow;
-  return C.red;
-}
-
-function challengerColor(c) {
-  if (c === "Strong Challenger behavior") return C.green;
-  if (c === "Partial Challenger behavior") return C.yellow;
-  return C.red;
-}
-
-function vossColor(v) {
-  if (v === "Strong Voss technique") return C.green;
-  if (v === "Some Voss technique") return C.yellow;
-  return C.red;
+function areaColor(area) {
+  if (area === "Retention") return C.green;
+  if (area === "Expansion") return "B4D7FF"; // light blue
+  return "E8D5F5"; // light purple for Evangelism
 }
 
 // Header cell (blue bg, white text)
@@ -191,16 +177,16 @@ const META = {
   dateGenerated: "March 12, 2026",
   periodCovered: "REPLACE: e.g. February 9 - March 2, 2026",
   preparedFor: "REPLACE: e.g. John Lowenthal, VP Sales",
-  outputPath: process.env.OUTPUT_PATH || `${process.env.HOME}/gong_call_evaluation_report.docx`,
+  outputPath: process.env.OUTPUT_PATH || `${process.env.HOME}/am_scorecard_report.docx`,
 };
 
-// Top-of-report summary (mandatory in v5)
+// Top-of-report summary (mandatory)
 const summary = {
-  overallAssessment: "REPLACE: 2-4 paragraphs covering call quality, commercial effectiveness, deal advancement, and framework themes.",
-  forLeadership: "REPLACE: Brief interpretation of deal health / rep effectiveness / coaching priority.",
-  forRep: "REPLACE: Brief interpretation of what to keep doing and what to improve first.",
+  overallAssessment: "REPLACE: 2-4 paragraphs covering call quality, client engagement, pillar coverage, and key area themes.",
+  forLeadership: "REPLACE: Brief interpretation of client health / AM effectiveness / coaching priority.",
+  forAM: "REPLACE: Brief interpretation of what to keep doing and what to improve first.",
   bestExamples: [
-    // { type: "worked", quote: "what the rep said or did", why: "why it worked" },
+    // { type: "worked", quote: "what the AM said or did", why: "why it worked" },
     // { type: "improve", quote: "what happened", stronger: "what stronger language sounds like" },
   ],
   coachingPriorities: [
@@ -212,66 +198,36 @@ const summary = {
 // Each rep object:
 // {
 //   name: "Rep Name",
-//   title: "Job Title",
+//   title: "Account Manager",
 //   avg: 7.50,
-//   profile: "Challenger",                  // Challenger Sale profile
-//   challengerDetail: {                     // v5: explicit Teach/Tailor/Take Control
-//     teach: "Strong Challenger behavior",
-//     tailor: "Partial Challenger behavior",
-//     takeControl: "Strong Challenger behavior",
-//     teachEvidence: "Evidence text",
-//     tailorEvidence: "Evidence text",
-//     takeControlEvidence: "Evidence text",
+//   profile: "Trusted Advisor",              // AM Profile Classification
+//   fourPillars: {                            // Four Pillars Coverage
+//     KDM: { covered: true, evidence: "Evidence text" },
+//     CS:  { covered: true, evidence: "Evidence text" },
+//     AV:  { covered: false, evidence: "N/A" },
+//     PR:  { covered: true, evidence: "Evidence text" },
 //   },
-//   meddpicc: "Proficient",                // MEDDPICC maturity level
-//   discovery: "Strong",                    // Discovery maturity level
-//   gapSelling: {                           // v5: Gap Selling lens
-//     currentState: "Assessment text",
-//     futureState: "Assessment text",
-//     problems: "Assessment text",
-//     impact: "Assessment text",
-//     rootCauses: "Assessment text",
-//     gapQuality: "Summary statement",
-//   },
-//   vossLens: {                             // v5+: Never Split the Difference lens
-//     tacticalEmpathy: "Assessment text",
-//     mirroringLabeling: "Assessment text",
-//     calibratedQuestions: "Assessment text",
-//     thatsRight: "Assessment text",
-//     overall: "Strong Voss technique",     // Strong / Some / Minimal
-//     overallEvidence: "Evidence text",
+//   keyAreas: {                               // Three Key Areas assessment
+//     retention: "Assessment text",
+//     expansion: "Assessment text",
+//     evangelism: "Assessment text",
 //   },
 //   calls: [
-//     { t: "Call Title", date: "Feb 17", dur: "47m",
-//       r: 8, d: 8, v: 9, a: 9, c: 8, e: 9, w: 8.55,
-//       rNote: "What happened", rEx: "Quote or coaching example",   // v5: per-dimension notes
-//       dNote: "What happened", dEx: "Quote or coaching example",
-//       vNote: "What happened", vEx: "Quote or coaching example",
-//       aNote: "What happened", aEx: "Quote or coaching example",
-//       cNote: "What happened", cEx: "Quote or coaching example",
-//       eNote: "What happened", eEx: "Quote or coaching example",
+//     { t: "Call Title", date: "Mar 17", dur: "47m",
+//       rq: 8, cd: 8, vd: 9, sa: 9, ce: 9, w: 8.55,
+//       rqNote: "What happened", rqEx: "Quote",
+//       cdNote: "What happened", cdEx: "Quote",
+//       vdNote: "What happened", vdEx: "Quote",
+//       saNote: "What happened", saEx: "Quote",
+//       ceNote: "What happened", ceEx: "Quote",
+//       pillars: { KDM: 1, CS: 1, AV: 0, PR: 1 },
+//       keyAreas: ["Retention", "Expansion"],
 //     },
 //   ],
-//   meddpiccMap: {                          // v5: uses Coverage + Evidence + Example to Improve
-//     M:  { coverage: "Strongly covered",       evidence: "Evidence", improve: "Example phrase" },
-//     E:  { coverage: "Touched but shallow",    evidence: "Evidence", improve: "Example phrase" },
-//     DC: { coverage: "Not covered",            evidence: "N/A",      improve: "Example phrase" },
-//     DP: { coverage: "Touched but shallow",    evidence: "Evidence", improve: "Example phrase" },
-//     I:  { coverage: "Strongly covered",       evidence: "Evidence", improve: "" },
-//     Ch: { coverage: "Not covered",            evidence: "N/A",      improve: "Example phrase" },
-//     Co: { coverage: "Touched but shallow",    evidence: "Evidence", improve: "Example phrase" },
-//   },
-//   meddpiccFreq: { M: "Always", E: "Sometimes", DC: "Always", DP: "Sometimes", I: "Always", Ch: "Always", Co: "Sometimes" },
-//   strengths: [
-//     ["Strength title", "Evidence description", "\"Transcript quote\""],
-//   ],
-//   devAreas: [
-//     ["Gap title", "Coaching action + suggested phrase", "\"Observed\" -> \"Stronger version\""],
-//   ],
-//   bestCall: "Description of best call and why",
-//   keep: ["Keep doing item 1", "Keep doing item 2"],
-//   start: ["Start doing item 1 with specific language", "Start doing item 2"],
-//   stop: ["Stop doing item 1"],
+//   strengths: [["Strength title", "Evidence", "\"Quote\""]],
+//   devAreas: [["Gap title", "Coaching action", "\"Observed\" -> \"Stronger\""]],
+//   bestCall: "Description of best call",
+//   keep: ["Keep doing 1"], start: ["Start doing 1"], stop: ["Stop doing 1"],
 // }
 
 const reps = [
@@ -279,7 +235,7 @@ const reps = [
 ];
 
 // Each ranked call:
-// { rank: 1, rep: "Name", t: "Call Title", date: "Feb 17", w: 8.55, top: "Advancement", weak: "Rapport" }
+// { rank: 1, rep: "Name", t: "Call Title", date: "Mar 17", w: 8.55, top: "Value Delivery", weak: "Client Engagement" }
 const allCalls = [
   // REPLACE: Add all ranked calls here
 ];
@@ -338,7 +294,7 @@ const headerFooter = {
       children: [new Paragraph({
         alignment: AlignmentType.RIGHT,
         children: [new TextRun({
-          text: "CONFIDENTIAL \u2014 Sales Call Evaluation Report",
+          text: "CONFIDENTIAL \u2014 AM Client Call Scorecard Report",
           font: "Arial", size: 18, color: C.lightGray
         })],
       })],
@@ -361,7 +317,7 @@ const headerFooter = {
 const titlePage = [
   new Paragraph({ spacing: { before: 3600 } }),
   new Paragraph({ alignment: AlignmentType.CENTER, children: [
-    new TextRun({ text: "Sales Call Evaluation Report", font: "Arial", size: 56, bold: true, color: C.darkBlue })
+    new TextRun({ text: "AM Client Call Scorecard Report", font: "Arial", size: 56, bold: true, color: C.darkBlue })
   ]}),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 240 }, children: [
     new TextRun({ text: "Confidential \u2014 For Management Review", font: "Arial", size: 24, italic: true, color: C.gray })
@@ -377,7 +333,7 @@ const titlePage = [
   ]}),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 480 }, children: [
     new TextRun({
-      text: "Frameworks Applied: MEDDPICC (30%) \u00B7 Gap Selling (30%) \u00B7 The Challenger Sale (25%) \u00B7 Never Split the Difference (15%)",
+      text: "Scoring: Relationship Quality (20%) \u00B7 Client Discovery (25%) \u00B7 Value Delivery (25%) \u00B7 Strategic Advancement (20%) \u00B7 Client Engagement (10%)",
       font: "Arial", size: 20, italic: true, color: C.gray
     })
   ]}),
@@ -390,7 +346,7 @@ const tocPage = [
   pb(),
 ];
 
-// ---------- MANDATORY SUMMARY (v5) ----------
+// ---------- MANDATORY SUMMARY ----------
 function buildSummary() {
   const kids = [];
   kids.push(h1("Summary"));
@@ -409,8 +365,8 @@ function buildSummary() {
   kids.push(new Paragraph({
     spacing: { after: 120 },
     children: [
-      new TextRun({ text: "For the rep: ", font: "Arial", size: 22, bold: true }),
-      new TextRun({ text: summary.forRep, font: "Arial", size: 22 }),
+      new TextRun({ text: "For the AM: ", font: "Arial", size: 22, bold: true }),
+      new TextRun({ text: summary.forAM, font: "Arial", size: 22 }),
     ]
   }));
 
@@ -497,166 +453,111 @@ function buildRepSection(rep, listIdx) {
   kids.push(h1(`${rep.name} \u2014 ${rep.title}`));
   kids.push(h2(`Overall Score: ${rep.avg.toFixed(2)} / 10`));
 
-  // Profile table (v5: includes Gap Selling)
-  const profCols = [2340, 2340, 2340, 2340];
+  // Profile table (3 columns: AM Profile, Relationship Depth, Key Strength)
+  const profCols = [3120, 3120, 3120];
   kids.push(new Table({
     width: { size: TABLE_W, type: WidthType.DXA },
     columnWidths: profCols,
     rows: [
       new TableRow({ children: [
-        hc("Challenger Profile", 2340), hc("MEDDPICC Maturity", 2340),
-        hc("Discovery Maturity", 2340), hc("Gap Selling", 2340)
+        hc("AM Profile", 3120), hc("Relationship Depth", 3120),
+        hc("Key Strength", 3120)
       ]}),
       new TableRow({ children: [
-        dc(rep.profile, 2340, { align: AlignmentType.CENTER }),
-        dc(rep.meddpicc, 2340, { align: AlignmentType.CENTER }),
-        dc(rep.discovery, 2340, { align: AlignmentType.CENTER }),
-        dc(rep.gapSelling ? rep.gapSelling.gapQuality : "N/A", 2340, { align: AlignmentType.CENTER }),
+        dc(rep.profile, 3120, { align: AlignmentType.CENTER }),
+        dc(rep.relationshipDepth || "N/A", 3120, { align: AlignmentType.CENTER }),
+        dc(rep.keyStrength || "N/A", 3120, { align: AlignmentType.CENTER }),
       ]}),
     ],
   }));
 
-  // MEDDPICC Coverage (v5: Coverage + Evidence + Example to Improve)
-  kids.push(h2("MEDDPICC Coverage"));
-  const mCols = [1600, 1600, 3160, 3000];
-  const mElements = [
-    { el: "Metrics", key: "M" }, { el: "Economic Buyer", key: "E" },
-    { el: "Decision Criteria", key: "DC" }, { el: "Decision Process", key: "DP" },
-    { el: "Identify Pain", key: "I" }, { el: "Champion", key: "Ch" },
-    { el: "Competition", key: "Co" },
+  // Four Pillars Coverage
+  kids.push(h2("Four Pillars Coverage"));
+  const pCols = [2200, 1600, 5560];
+  const pillars = [
+    { name: "Key Decision Maker (KDM)", key: "KDM" },
+    { name: "Client Success (CS)", key: "CS" },
+    { name: "Additional Value (AV)", key: "AV" },
+    { name: "Product Roadmap (PR)", key: "PR" },
   ];
   kids.push(new Table({
     width: { size: TABLE_W, type: WidthType.DXA },
-    columnWidths: mCols,
+    columnWidths: pCols,
     rows: [
       new TableRow({ children: [
-        hc("Element", 1600), hc("Coverage", 1600), hc("Evidence", 3160), hc("Example to Improve", 3000)
+        hc("Pillar", 2200), hc("Coverage", 1600), hc("Evidence", 5560)
       ]}),
-      ...mElements.map((m, i) => {
-        const entry = rep.meddpiccMap ? rep.meddpiccMap[m.key] : null;
-        const coverage = entry ? entry.coverage : "Not covered";
+      ...pillars.map((p, i) => {
+        const entry = rep.fourPillars ? rep.fourPillars[p.key] : null;
+        const covered = entry ? entry.covered : false;
         const evidence = entry ? entry.evidence : "N/A";
-        const improve = entry ? entry.improve : "";
         return new TableRow({ children: [
-          dc(m.el, 1600, { fill: i % 2 ? C.altRow : undefined, bold: true }),
-          dc(coverage, 1600, { fill: coverageColor(coverage), align: AlignmentType.CENTER }),
-          dc(evidence, 3160, { fill: i % 2 ? C.altRow : undefined }),
-          dc(improve, 3000, { fill: i % 2 ? C.altRow : undefined, italic: true }),
+          dc(p.name, 2200, { fill: i % 2 ? C.altRow : undefined, bold: true }),
+          dc(covered ? "Covered" : "Not Covered", 1600, { fill: pillarColor(covered), align: AlignmentType.CENTER }),
+          dc(evidence, 5560, { fill: i % 2 ? C.altRow : undefined }),
         ]});
       }),
     ],
   }));
 
-  // Challenger Lens (v5: Teach / Tailor / Take Control)
-  if (rep.challengerDetail) {
-    kids.push(h2("Challenger Sale Lens"));
-    const chCols = [1800, 2000, 5560];
-    kids.push(new Table({
-      width: { size: TABLE_W, type: WidthType.DXA },
-      columnWidths: chCols,
-      rows: [
-        new TableRow({ children: [hc("Behavior", 1800), hc("Assessment", 2000), hc("Evidence", 5560)] }),
-        new TableRow({ children: [
-          dc("Teach", 1800, { bold: true }),
-          dc(rep.challengerDetail.teach, 2000, { fill: challengerColor(rep.challengerDetail.teach), align: AlignmentType.CENTER }),
-          dc(rep.challengerDetail.teachEvidence, 5560),
-        ]}),
-        new TableRow({ children: [
-          dc("Tailor", 1800, { bold: true, fill: C.altRow }),
-          dc(rep.challengerDetail.tailor, 2000, { fill: challengerColor(rep.challengerDetail.tailor), align: AlignmentType.CENTER }),
-          dc(rep.challengerDetail.tailorEvidence, 5560, { fill: C.altRow }),
-        ]}),
-        new TableRow({ children: [
-          dc("Take Control", 1800, { bold: true }),
-          dc(rep.challengerDetail.takeControl, 2000, { fill: challengerColor(rep.challengerDetail.takeControl), align: AlignmentType.CENTER }),
-          dc(rep.challengerDetail.takeControlEvidence, 5560),
-        ]}),
-      ],
-    }));
-  }
+  // Key Areas Assessment
+  kids.push(h2("Key Areas Assessment"));
+  const aCols = [2000, 7360];
+  const areas = [
+    { name: "Retention", key: "retention" },
+    { name: "Expansion", key: "expansion" },
+    { name: "Evangelism", key: "evangelism" },
+  ];
+  kids.push(new Table({
+    width: { size: TABLE_W, type: WidthType.DXA },
+    columnWidths: aCols,
+    rows: [
+      new TableRow({ children: [hc("Area", 2000), hc("Assessment", 7360)] }),
+      ...areas.map((a) => {
+        const assessment = rep.keyAreas ? (rep.keyAreas[a.key] || "N/A") : "N/A";
+        return new TableRow({ children: [
+          dc(a.name, 2000, { bold: true, fill: areaColor(a.name) }),
+          dc(assessment, 7360),
+        ]});
+      }),
+    ],
+  }));
 
-  // Gap Selling Lens (v5)
-  if (rep.gapSelling) {
-    kids.push(h2("Gap Selling Lens"));
-    const gCols = [2000, 7360];
-    kids.push(new Table({
-      width: { size: TABLE_W, type: WidthType.DXA },
-      columnWidths: gCols,
-      rows: [
-        new TableRow({ children: [hc("Element", 2000), hc("Assessment", 7360)] }),
-        new TableRow({ children: [dc("Current State", 2000, { bold: true }), dc(rep.gapSelling.currentState, 7360)] }),
-        new TableRow({ children: [dc("Future State", 2000, { bold: true, fill: C.altRow }), dc(rep.gapSelling.futureState, 7360, { fill: C.altRow })] }),
-        new TableRow({ children: [dc("Problems", 2000, { bold: true }), dc(rep.gapSelling.problems, 7360)] }),
-        new TableRow({ children: [dc("Business Impact", 2000, { bold: true, fill: C.altRow }), dc(rep.gapSelling.impact, 7360, { fill: C.altRow })] }),
-        new TableRow({ children: [dc("Root Causes", 2000, { bold: true }), dc(rep.gapSelling.rootCauses, 7360)] }),
-        new TableRow({ children: [
-          dc("Gap Quality", 2000, { bold: true, fill: C.altRow }),
-          dc(rep.gapSelling.gapQuality, 7360, { fill: C.altRow, bold: true }),
-        ]}),
-      ],
-    }));
-  }
-
-  // Never Split the Difference Lens (v5+)
-  if (rep.vossLens) {
-    kids.push(h2("Never Split the Difference Lens"));
-    const vCols = [2200, 7160];
-    kids.push(new Table({
-      width: { size: TABLE_W, type: WidthType.DXA },
-      columnWidths: vCols,
-      rows: [
-        new TableRow({ children: [hc("Technique", 2200), hc("Assessment", 7160)] }),
-        new TableRow({ children: [dc("Tactical Empathy", 2200, { bold: true }), dc(rep.vossLens.tacticalEmpathy, 7160)] }),
-        new TableRow({ children: [dc("Mirroring / Labeling", 2200, { bold: true, fill: C.altRow }), dc(rep.vossLens.mirroringLabeling, 7160, { fill: C.altRow })] }),
-        new TableRow({ children: [dc("Calibrated Questions", 2200, { bold: true }), dc(rep.vossLens.calibratedQuestions, 7160)] }),
-        new TableRow({ children: [dc("\"That's Right\" Moments", 2200, { bold: true, fill: C.altRow }), dc(rep.vossLens.thatsRight, 7160, { fill: C.altRow })] }),
-        new TableRow({ children: [
-          dc("Overall Voss Technique", 2200, { bold: true }),
-          dc(`${rep.vossLens.overall} — ${rep.vossLens.overallEvidence}`, 7160, {
-            fill: vossColor(rep.vossLens.overall), bold: true
-          }),
-        ]}),
-      ],
-    }));
-  }
-
-  // Call-by-call Scorecard (v5: includes What Happened + Example columns via notes)
+  // Call-by-call Scorecard
   kids.push(h2("Call-by-Call Scorecards"));
-  const sCols = [400, 2160, 700, 700, 700, 700, 700, 700, 700, 1900];
+  const sCols = [400, 2460, 700, 800, 800, 800, 800, 800, 1800];
   kids.push(new Table({
     width: { size: TABLE_W, type: WidthType.DXA },
     columnWidths: sCols,
     rows: [
       new TableRow({ children: [
-        hc("#", 400), hc("Call Title", 2160), hc("Date", 700),
-        hc("Rap", 700), hc("Disc", 700), hc("Val", 700),
-        hc("Adv", 700), hc("Ctrl", 700), hc("Eng", 700), hc("Total", 1900)
+        hc("#", 400), hc("Call Title", 2460), hc("Date", 700),
+        hc("RQ", 800), hc("CD", 800), hc("VD", 800),
+        hc("SA", 800), hc("CE", 800), hc("Total", 1800)
       ]}),
       ...rep.calls.map((call, i) => new TableRow({ children: [
         dc(String(i + 1), 400, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(call.t, 2160, { bold: i === 0, italic: i === rep.calls.length - 1, fill: i % 2 ? C.altRow : undefined }),
+        dc(call.t, 2460, { bold: i === 0, italic: i === rep.calls.length - 1, fill: i % 2 ? C.altRow : undefined }),
         dc(call.date, 700, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(String(call.r), 700, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(String(call.d), 700, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(String(call.v), 700, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(String(call.a), 700, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(String(call.c), 700, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(String(call.e), 700, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
-        dc(call.w.toFixed(2), 1900, { align: AlignmentType.CENTER, bold: true, fill: scoreColor(call.w) }),
+        dc(String(call.rq), 800, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
+        dc(String(call.cd), 800, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
+        dc(String(call.vd), 800, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
+        dc(String(call.sa), 800, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
+        dc(String(call.ce), 800, { align: AlignmentType.CENTER, fill: i % 2 ? C.altRow : undefined }),
+        dc(call.w.toFixed(2), 1800, { align: AlignmentType.CENTER, bold: true, fill: scoreColor(call.w) }),
       ]})),
     ],
   }));
 
-  // Per-call dimension notes (v5: What Happened + Example for each dimension)
+  // Per-call dimension notes
   rep.calls.forEach((call) => {
     kids.push(h3(`${call.t} (${call.date})`));
     const dims = [
-      { name: "Rapport", note: call.rNote, ex: call.rEx },
-      { name: "Discovery", note: call.dNote, ex: call.dEx },
-      { name: "Value", note: call.vNote, ex: call.vEx },
-      { name: "Advancement", note: call.aNote, ex: call.aEx },
-      { name: "Control", note: call.cNote, ex: call.cEx },
-      { name: "Engagement", note: call.eNote, ex: call.eEx },
+      { name: "Relationship Quality", note: call.rqNote, ex: call.rqEx },
+      { name: "Client Discovery", note: call.cdNote, ex: call.cdEx },
+      { name: "Value Delivery", note: call.vdNote, ex: call.vdEx },
+      { name: "Strategic Advancement", note: call.saNote, ex: call.saEx },
+      { name: "Client Engagement", note: call.ceNote, ex: call.ceEx },
     ];
     dims.forEach(dim => {
       if (dim.note) {
@@ -681,7 +582,7 @@ function buildRepSection(rep, listIdx) {
     if (s[2]) kids.push(quoteText(s[2]));
   });
 
-  // Dev areas (v5: with coaching examples)
+  // Dev areas (with coaching examples)
   kids.push(h2("Development Opportunities"));
   rep.devAreas.forEach((d) => {
     kids.push(numberedItem(d[0], d[1], numRef2));
@@ -732,25 +633,30 @@ function buildCrossRep() {
     ],
   }));
 
-  // Team MEDDPICC heatmap (uses frequency for multi-call)
+  // Team Four Pillars Heatmap
   if (reps.length > 1) {
-    kids.push(h2("Team MEDDPICC Heatmap"));
+    kids.push(h2("Team Four Pillars Heatmap"));
     const repNames = reps.map(r => r.name.split(" ")[0]);
     const hmColW = Math.floor((TABLE_W - 1900) / reps.length);
     const hmCols = [1900, ...repNames.map(() => hmColW)];
-    const mElements = ["Metrics", "Economic Buyer", "Decision Criteria", "Decision Process", "Identify Pain", "Champion", "Competition"];
-    const mKeys = ["M", "E", "DC", "DP", "I", "Ch", "Co"];
+    const pillarElements = [
+      { name: "Key Decision Maker", key: "KDM" },
+      { name: "Client Success", key: "CS" },
+      { name: "Additional Value", key: "AV" },
+      { name: "Product Roadmap", key: "PR" },
+    ];
 
     kids.push(new Table({
       width: { size: TABLE_W, type: WidthType.DXA },
       columnWidths: hmCols,
       rows: [
-        new TableRow({ children: [hc("Element", 1900), ...repNames.map(n => hc(n, hmColW))] }),
-        ...mElements.map((el, i) => new TableRow({ children: [
-          dc(el, 1900, { bold: true, fill: i % 2 ? C.altRow : undefined }),
+        new TableRow({ children: [hc("Pillar", 1900), ...repNames.map(n => hc(n, hmColW))] }),
+        ...pillarElements.map((el, i) => new TableRow({ children: [
+          dc(el.name, 1900, { bold: true, fill: i % 2 ? C.altRow : undefined }),
           ...reps.map(r => {
-            const freq = r.meddpiccFreq ? (r.meddpiccFreq[mKeys[i]] || "Rarely") : "N/A";
-            return dc(freq, hmColW, { align: AlignmentType.CENTER, fill: freqColor(freq) });
+            const entry = r.fourPillars ? r.fourPillars[el.key] : null;
+            const covered = entry ? entry.covered : false;
+            return dc(covered ? "Covered" : "Not Covered", hmColW, { align: AlignmentType.CENTER, fill: pillarColor(covered) });
           }),
         ]})),
       ],
@@ -766,13 +672,13 @@ function buildAppendix() {
   return [
     h1("Appendix: Methodology"),
     h2("Scoring Framework"),
-    body("Each call was evaluated on six dimensions (1-10 scale), combined using: Weighted Score = (Rapport x 0.10) + (Discovery x 0.30) + (Value x 0.15) + (Advancement x 0.20) + (Control x 0.10) + (Engagement x 0.15). The weighting is derived from four framework priorities: MEDDPICC (30%), Gap Selling (30%), Challenger Sale (25%), and Never Split the Difference (15%)."),
-    h2("Framework Definitions"),
-    body("MEDDPICC: A B2B sales qualification methodology tracking Metrics, Economic Buyer, Decision Criteria, Decision Process, Identify Pain, Champion, and Competition. Each element was assessed per call using 'Strongly covered / Touched but shallow / Not covered' classification, and across calls per rep using 'Always / Sometimes / Rarely' frequency."),
-    body("The Challenger Sale: Evaluates reps on three core behaviors: Teach (bringing insights), Tailor (customizing to the account), and Take Control (guiding the process). Each behavior is classified as Strong / Partial / Mostly reactive."),
-    body("Gap Selling: Assesses whether the rep uncovered the buyer's Current State, Future State, Problems, Business Impact, Root Causes, and Cost of Inaction. A strong Gap Selling execution means the rep understood the gap, not just the symptoms."),
-    body("Never Split the Difference (Chris Voss): Evaluates negotiation and influence techniques including Tactical Empathy, Mirroring, Labeling, Calibrated Questions, Accusation Audits, and 'That\\'s Right' moments. Each rep is classified as Strong / Some / Minimal Voss technique."),
-    body("Effective Discovery: Evaluates whether reps systematically uncover Timeline, Budget, Competition, Decision Process, Pain Points, Business Impact, Root Causes, and Stakeholder Map."),
+    body("Each call was evaluated on five dimensions (1-10 scale), combined using: Weighted Score = (Relationship Quality \u00D7 0.20) + (Client Discovery \u00D7 0.25) + (Value Delivery \u00D7 0.25) + (Strategic Advancement \u00D7 0.20) + (Client Engagement \u00D7 0.10)."),
+    h2("Four Pillars of Success"),
+    body("The Four Pillars track whether key topics were addressed on each call: Key Decision Maker (KDM), Client Success (CS), Additional Value (AV), and Product Roadmap (PR). Each is binary (covered/not covered) per call."),
+    h2("Three Key Areas"),
+    body("Each call is tagged with the areas actively advanced: Retention (client health, value realization), Expansion (upsell/cross-sell, new use cases), and Evangelism (advocacy, references, case studies)."),
+    h2("AM Profile Classification"),
+    body("Each AM is classified based on their overall pattern: Trusted Advisor, Relationship Builder, Problem Solver, Account Grower, or Caretaker."),
   ];
 }
 
