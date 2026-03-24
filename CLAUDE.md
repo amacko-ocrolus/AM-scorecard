@@ -2,7 +2,7 @@
 
 ## What This Is
 
-This repo contains the weekly Ocrolus AM (Account Manager) client call scorecard — an HTML dashboard hosted via GitHub Pages at `index.html`. It displays scored Gong client calls for three AMs, with per-call breakdowns, coaching notes, Four Pillars coverage, and cross-rep comparisons.
+This repo contains the weekly Ocrolus AM (Account Manager) client call scorecard — an HTML dashboard hosted via GitHub Pages at `index.html`. It displays scored Gong client calls for five AMs, with per-call breakdowns, coaching notes, Four Pillars coverage, and cross-rep comparisons.
 
 The scorecard is updated weekly (typically Sundays) and shared with sales leadership via a permanent Google Drive URL and Slack.
 
@@ -10,9 +10,11 @@ The scorecard is updated weekly (typically Sundays) and shared with sales leader
 
 | Rep | Title | Gong User ID |
 |-----|-------|-------------|
-| Anjelica Purnell | Account Manager | REPLACE_WITH_GONG_ID |
-| Noah Jones | Account Manager | REPLACE_WITH_GONG_ID |
-| Elizabeth Spade | Account Manager | REPLACE_WITH_GONG_ID |
+| Anjelica Purnell | Account Manager | 7521307078149635406 |
+| Noah Jones | Account Manager | 8357687250089071625 |
+| Elizabeth Spade | Account Manager | 1260140667797651866 |
+| Madeline Mazzella | Account Manager | 926479123958068574 |
+| Spencer Schultz | Account Manager | 7188235930408947059 |
 
 ## Gong API Details
 
@@ -20,7 +22,7 @@ The scorecard is updated weekly (typically Sundays) and shared with sales leader
 - **getCalls** requires explicit workspace ID and date range in ISO 8601 with timezone offset (e.g., `2026-03-09T00:00:00-05:00`)
 - **getCallTranscripts** must be fetched one call at a time: `filter: { callIds: ["<single_id>"] }` (bulk fetches exceed size limits)
 - Filter defaults: `scope = "External"`, `direction = "Conference"`, `duration > 600` seconds
-- Users endpoint paginates at 100 per page; all three reps are known IDs above
+- Users endpoint paginates at 100 per page; all five reps are known IDs above
 
 ## Scoring Framework (AM Scorecard v1)
 
