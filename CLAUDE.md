@@ -92,6 +92,15 @@ The Four Pillars are **not a single-call checklist**. AMs should cover 2-3 pilla
 
 Score **depth over breadth**. Pattern-level gaps (across multiple calls) matter more than single-call gaps.
 
+### Coaching Principles
+
+- **Keep/Start/Stop = ONE item each** — the single highest-impact action per category, not a list
+- **No rep name openers** — don't start coaching with "Sarah, you need to..." — get straight to the point
+- **Executive-level gravitas** — coaching reads like a senior leader, not a checkbox audit
+- **Never criticize call length** — long calls usually mean an engaged customer
+- **Specific call references** — coaching must cite actual call moments, not generic advice. Reference what the client said and suggest a specific alternative phrase or question the AM could have used
+- **Multi-call patterns > single-call gaps** — one missed dimension on one call doesn't matter; the same gap across multiple calls is the coaching moment
+
 ### Epistemic Humility
 
 - AI has transcripts only — no tone, body language, account history, or relationship context

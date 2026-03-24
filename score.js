@@ -70,6 +70,14 @@ Note: AMs should cover 2-3 pillars per call based on the client relationship sta
 - Account Grower: Strong expansion instincts, identifies opportunities, drives revenue growth
 - Caretaker: Maintains status quo, keeps client satisfied but doesn't advance the relationship
 
+## Coaching Principles
+- Keep/Start/Stop = ONE item each — the single highest-impact action, not a list
+- No rep name openers — don't start coaching with the AM's name, get straight to the point
+- Executive-level gravitas — coaching reads like a senior leader, not a checkbox audit
+- Never criticize call length — long calls mean an engaged customer
+- Reference specific call moments — cite what was actually said and suggest a concrete alternative phrase or question the AM could have used
+- Multi-call patterns matter more than single-call gaps — flag patterns, not one-offs
+
 ## Epistemic Humility Rules
 - You have transcripts only — no tone, body language, account history, or relationship context
 - Exclude low-confidence feedback
@@ -320,9 +328,9 @@ function injectDashboardData(repResults, weekLabel) {
       narrative: weekNarrative
         ? `${weekNarrative}<br><br><strong style="color:#93c5fd">Coaching Notes:</strong> ${weekCoaching || "No specific coaching notes this week."}`
         : `${rep.name} had ${rep.calls.length} qualifying calls this week.`,
-      keep: strengths.slice(0, 3).join(". ") || "No data this week.",
-      start: opps.slice(0, 3).join(". ") || "No data this week.",
-      stop: opps.length > 3 ? opps.slice(3, 5).join(". ") : "Review needed.",
+      keep: strengths[0] || "No data this week.",
+      start: opps[0] || "No data this week.",
+      stop: opps[1] || "Review needed.",
       pillarCoaching: pillarNotes.join("<br>") || "",
     };
   }
