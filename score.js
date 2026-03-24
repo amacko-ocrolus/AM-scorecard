@@ -14,6 +14,7 @@
  *   SLACK_WEBHOOK_URL - Slack incoming webhook
  */
 
+require("dotenv").config();
 const Anthropic = require("@anthropic-ai/sdk");
 const fs = require("fs");
 const https = require("https");
