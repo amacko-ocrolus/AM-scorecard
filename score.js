@@ -134,6 +134,10 @@ function gongRequest(path, body) {
         let body = "";
         res.on("data", (chunk) => (body += chunk));
         res.on("end", () => {
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            reject(new Error(`Gong API ${path} returned ${res.statusCode}: ${body.slice(0, 500)}`));
+            return;
+          }
           try {
             resolve(JSON.parse(body));
           } catch (e) {
@@ -149,15 +153,25 @@ function gongRequest(path, body) {
 }
 
 async function getCalls(fromDate, toDate) {
-  const result = await gongRequest("/calls", {
-    filter: {
-      fromDateTime: fromDate,
-      toDateTime: toDate,
-      workspaceId: WORKSPACE_ID,
-    },
-    cursor: "",
-  });
-  return result.calls || [];
+  let allCalls = [];
+  let cursor = "";
+  do {
+    const result = await gongRequest("/calls", {
+      filter: {
+        fromDateTime: fromDate,
+        toDateTime: toDate,
+        workspaceId: WORKSPACE_ID,
+        scope: "External",
+        direction: "Conference",
+      },
+      cursor,
+    });
+    const batch = result.calls || [];
+    allCalls = allCalls.concat(batch);
+    cursor = result.records?.cursor || "";
+    console.log(`   Fetched ${batch.length} calls (total so far: ${allCalls.length})${cursor ? ", fetching next page..." : ""}`);
+  } while (cursor);
+  return allCalls;
 }
 
 async function getTranscript(callId) {
@@ -533,8 +547,6 @@ async function main() {
     const repCalls = allGongCalls.filter(
       (c) =>
         c.primaryUserId === rep.gongId &&
-        c.scope === "External" &&
-        c.direction === "Conference" &&
         c.duration >= MIN_DURATION
     );
 
