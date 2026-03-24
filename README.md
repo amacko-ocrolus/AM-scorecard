@@ -16,7 +16,7 @@ The scorecard evaluates AM client calls across three layers:
 
 - **Four Pillars of Success** (binary per call) — Key Decision Maker, Client Success, Additional Value, Product Roadmap
 - **Five Scoring Dimensions** (1-10 scale) — Relationship Quality, Client Discovery, Value Delivery, Strategic Advancement, Client Engagement
-- **Three Key Areas** (tags per call) — Retention, Expansion, Evangelism
+- **Three Key Areas** (tags per call) — Retention, Expansion, Advocacy
 
 ## Reps
 

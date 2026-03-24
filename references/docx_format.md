@@ -87,7 +87,7 @@ function pillarColor(covered) {
 function areaColor(area) {
   if (area === "Retention") return "#C6EFCE";
   if (area === "Expansion") return "#B4D7FF";
-  return "#E8D5F5"; // Evangelism
+  return "#E8D5F5"; // Advocacy
 }
 ```
 
@@ -134,7 +134,7 @@ Each rep section contains:
    Pillar | Coverage (Covered/Not Covered, color-coded green/red) | Evidence
 
 3. **Key Areas Assessment Table** (2 columns):
-   Area (Retention/Expansion/Evangelism) | Assessment
+   Area (Retention/Expansion/Advocacy) | Assessment
 
 4. **Call-by-Call Scorecard** (8 columns):
    # | Call Title | Date | RQ | CD | VD | SA | CE | Total

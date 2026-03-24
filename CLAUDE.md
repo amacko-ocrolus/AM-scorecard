@@ -70,7 +70,7 @@ Each call is tagged with which areas were actively advanced:
 |------|-------|------------------------|
 | Retention | Green | AM validated client health, addressed concerns, confirmed value realization, strengthened relationship |
 | Expansion | Blue | AM identified upsell/cross-sell opportunities, explored new use cases, discussed volume growth |
-| Evangelism | Purple | AM cultivated advocacy — references, case studies, peer introductions, event participation |
+| Advocacy | Purple | AM cultivated advocacy — references, case studies, peer introductions, event participation |
 
 ### AM Profile Classification
 
@@ -91,6 +91,15 @@ The Four Pillars are **not a single-call checklist**. AMs should cover 2-3 pilla
 - Escalation/issue calls: Client Success + Key Decision Maker
 
 Score **depth over breadth**. Pattern-level gaps (across multiple calls) matter more than single-call gaps.
+
+### Coaching Principles
+
+- **Keep/Start/Stop = ONE item each** — the single highest-impact action per category, not a list
+- **No rep name openers** — don't start coaching with "Sarah, you need to..." — get straight to the point
+- **Executive-level gravitas** — coaching reads like a senior leader, not a checkbox audit
+- **Never criticize call length** — long calls usually mean an engaged customer
+- **Specific call references** — coaching must cite actual call moments, not generic advice. Reference what the client said and suggest a specific alternative phrase or question the AM could have used
+- **Multi-call patterns > single-call gaps** — one missed dimension on one call doesn't matter; the same gap across multiple calls is the coaching moment
 
 ### Epistemic Humility
 
@@ -114,7 +123,7 @@ The processor extracts: opening/middle/closing segments, speaker talk ratios, AM
 - Header with version, date range, and rep count
 - Per-rep cards with scored calls, dimension breakdowns, coaching notes
 - Four Pillars coverage heatmaps (color-coded: green/gray)
-- Key Area tags per call (Retention/Expansion/Evangelism)
+- Key Area tags per call (Retention/Expansion/Advocacy)
 - Cross-rep comparison and team-level insights
 - Footer with rubric version and dimension weights
 

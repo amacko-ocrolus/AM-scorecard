@@ -5,3 +5,4 @@ Old/
 ae-scorecard-repo.zip
 *.skill
 package-lock.json
+.env

@@ -14,6 +14,7 @@
  *   SLACK_WEBHOOK_URL - Slack incoming webhook
  */
 
+require("dotenv").config();
 const Anthropic = require("@anthropic-ai/sdk");
 const fs = require("fs");
 const https = require("https");
@@ -37,7 +38,7 @@ const MIN_DURATION = 600; // 10 minutes minimum
 // Layer 2: Four Pillars of Success (binary per call)
 //   KDM, CS, AV, PR
 // Layer 3: Three Key Areas (tags per call)
-//   Retention, Expansion, Evangelism
+//   Retention, Expansion, Advocacy
 
 const SCORING_PROMPT = `You are an expert Account Management coach evaluating a client call for an Ocrolus Account Manager. Use the AM Scorecard v1 methodology below.
 
@@ -61,7 +62,7 @@ Note: AMs should cover 2-3 pillars per call based on the client relationship sta
 ### Three Key Areas (tag which were actively advanced)
 - Retention: AM validated client health, addressed concerns, confirmed value realization, strengthened relationship
 - Expansion: AM identified upsell/cross-sell opportunities, explored new use cases, discussed volume growth
-- Evangelism: AM cultivated advocacy — references, case studies, peer introductions, event participation
+- Advocacy: AM cultivated advocacy — references, case studies, peer introductions, event participation
 
 ### AM Profile Classification
 - Trusted Advisor: Deep strategic relationship, proactive guidance, client views AM as partner
@@ -69,6 +70,14 @@ Note: AMs should cover 2-3 pillars per call based on the client relationship sta
 - Problem Solver: Excellent at reactive support, but doesn't proactively advance the account
 - Account Grower: Strong expansion instincts, identifies opportunities, drives revenue growth
 - Caretaker: Maintains status quo, keeps client satisfied but doesn't advance the relationship
+
+## Coaching Principles
+- Keep/Start/Stop = ONE item each — the single highest-impact action, not a list
+- No rep name openers — don't start coaching with the AM's name, get straight to the point
+- Executive-level gravitas — coaching reads like a senior leader, not a checkbox audit
+- Never criticize call length — long calls mean an engaged customer
+- Reference specific call moments — cite what was actually said and suggest a concrete alternative phrase or question the AM could have used
+- Multi-call patterns matter more than single-call gaps — flag patterns, not one-offs
 
 ## Epistemic Humility Rules
 - You have transcripts only — no tone, body language, account history, or relationship context
@@ -89,7 +98,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
   "weighted": N.NN,
   "talkRatio": N,
   "pillars": {"KDM": 0or1, "CS": 0or1, "AV": 0or1, "PR": 0or1},
-  "keyAreas": ["Retention" and/or "Expansion" and/or "Evangelism"],
+  "keyAreas": ["Retention" and/or "Expansion" and/or "Advocacy"],
   "profile": "Trusted Advisor|Relationship Builder|Problem Solver|Account Grower|Caretaker",
   "strengths": ["specific strength with evidence from the transcript", "second strength"],
   "opportunities": ["specific opportunity with coaching suggestion", "second opportunity"],
@@ -320,9 +329,9 @@ function injectDashboardData(repResults, weekLabel) {
       narrative: weekNarrative
         ? `${weekNarrative}<br><br><strong style="color:#93c5fd">Coaching Notes:</strong> ${weekCoaching || "No specific coaching notes this week."}`
         : `${rep.name} had ${rep.calls.length} qualifying calls this week.`,
-      keep: strengths.slice(0, 3).join(". ") || "No data this week.",
-      start: opps.slice(0, 3).join(". ") || "No data this week.",
-      stop: opps.length > 3 ? opps.slice(3, 5).join(". ") : "Review needed.",
+      keep: strengths[0] || "No data this week.",
+      start: opps[0] || "No data this week.",
+      stop: opps[1] || "Review needed.",
       pillarCoaching: pillarNotes.join("<br>") || "",
     };
   }
@@ -468,12 +477,12 @@ function buildSlackMessage(repsData, allCalls) {
   });
 
   // Key Areas summary
-  const areaCounts = { Retention: 0, Expansion: 0, Evangelism: 0 };
+  const areaCounts = { Retention: 0, Expansion: 0, Advocacy: 0 };
   allCalls.forEach(c => {
     (c.keyAreas || []).forEach(a => { if (areaCounts[a] !== undefined) areaCounts[a]++; });
   });
 
-  msg += `\n*Key Areas*: Retention ${areaCounts.Retention} · Expansion ${areaCounts.Expansion} · Evangelism ${areaCounts.Evangelism}\n`;
+  msg += `\n*Key Areas*: Retention ${areaCounts.Retention} · Expansion ${areaCounts.Expansion} · Advocacy ${areaCounts.Advocacy}\n`;
 
   msg += `\n---\n\n:link: *<https://amacko-ocrolus.github.io/AM-scorecard/|Open Full Interactive Dashboard>* — works on desktop and mobile\n\n_Scored via AM Scorecard v1 · RQ 20% · CD 25% · VD 25% · SA 20% · CE 10%_`;
 
