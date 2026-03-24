@@ -1,16 +1,16 @@
-# DOCX Formatting Specification (v5)
+# DOCX Formatting Specification — AM Scorecard v1
 
 This document defines the exact formatting for the Word document output.
 
 ## Document Structure
 
-1. **Title Page** — Report title, confidentiality notice, date, period, recipient, frameworks
+1. **Title Page** — Report title, confidentiality notice, date, period, recipient, scoring dimensions
 2. **Table of Contents** — Auto-generated from headings
 3. **Summary** — Overall Assessment, What This Means, Best Examples Observed, Coaching Priority
 4. **Executive Summary** — Rankings table, narrative, model call callout
-5. **Individual Rep Reports** (one per rep) — Profile, MEDDPICC, Challenger Lens, Gap Selling Lens, scorecards, per-call notes, strengths, dev areas, coaching plan
-6. **Cross-Rep Comparison** — Full ranking, team heatmap, best practices, shadow pairings, priorities
-7. **Appendix: Methodology** — Scoring framework, framework definitions, top calls for review
+5. **Individual Rep Reports** (one per rep) — Profile, Four Pillars, Key Areas, AM Profile, scorecards, per-call notes, strengths, dev areas, coaching plan
+6. **Cross-Rep Comparison** — Full ranking, team Four Pillars heatmap, best practices, shadow pairings, priorities
+7. **Appendix: Methodology** — Scoring framework, dimension and pillar definitions, top calls for review
 
 ## Color Palette
 
@@ -20,9 +20,9 @@ This document defines the exact formatting for the Word document output.
 | Primary medium | #2E75B6 | Heading 2/3, table headers, accents |
 | Table header bg | #D5E8F0 | Alternate table header style |
 | Alternating row | #F2F7FB | Zebra striping on tables |
-| Score green | #C6EFCE | Scores 8.0+ and "Always"/"Strongly covered"/"Strong Challenger"/"Strong Voss technique" |
-| Score yellow | #FFEB9C | Scores 5.0-7.99 and "Sometimes"/"Touched but shallow"/"Partial Challenger"/"Some Voss technique" |
-| Score red | #FFC7CE | Scores below 5.0 and "Rarely"/"Not covered"/"Mostly reactive"/"Minimal Voss technique" |
+| Score green | #C6EFCE | Scores 8.5+ and Pillar covered |
+| Score blue | #B4D7FF | Scores 7.5-8.49 |
+| Score yellow | #FFEB9C | Scores below 7.5 |
 | Quote text | #404040 | Transcript quotes |
 | Borders | #CCCCCC | Table borders |
 | Gray | #666666 | Subtitle text |
@@ -62,7 +62,7 @@ This document defines the exact formatting for the Word document output.
 
 ## Headers & Footers
 
-- **Header**: "CONFIDENTIAL — Sales Call Evaluation Report" — right-aligned, 9pt, #999999
+- **Header**: "CONFIDENTIAL — AM Client Call Scorecard Report" — right-aligned, 9pt, #999999
 - **Footer**: "Page [X]" — centered, 9pt, #999999
 
 ## Numbering
@@ -75,52 +75,38 @@ This document defines the exact formatting for the Word document output.
 
 ```javascript
 function scoreColor(score) {
-  if (score >= 8) return "#C6EFCE";  // green
-  if (score >= 5) return "#FFEB9C";  // yellow
-  return "#FFC7CE";                   // red
+  if (score >= 8.5) return "#C6EFCE";  // green
+  if (score >= 7.5) return "#B4D7FF";  // blue
+  return "#FFEB9C";                     // yellow
 }
 
-function freqColor(frequency) {
-  if (frequency === "Always") return "#C6EFCE";
-  if (frequency === "Sometimes") return "#FFEB9C";
-  return "#FFC7CE";
+function pillarColor(covered) {
+  return covered ? "#C6EFCE" : "#FFC7CE";
 }
 
-function coverageColor(coverage) {
-  if (coverage === "Strongly covered") return "#C6EFCE";
-  if (coverage === "Touched but shallow") return "#FFEB9C";
-  return "#FFC7CE";  // "Not covered"
-}
-
-function challengerColor(assessment) {
-  if (assessment === "Strong Challenger behavior") return "#C6EFCE";
-  if (assessment === "Partial Challenger behavior") return "#FFEB9C";
-  return "#FFC7CE";  // "Mostly reactive / relationship-led"
-}
-
-function vossColor(assessment) {
-  if (assessment === "Strong Voss technique") return "#C6EFCE";
-  if (assessment === "Some Voss technique") return "#FFEB9C";
-  return "#FFC7CE";  // "Minimal / no Voss technique"
+function areaColor(area) {
+  if (area === "Retention") return "#C6EFCE";
+  if (area === "Expansion") return "#B4D7FF";
+  return "#E8D5F5"; // Evangelism
 }
 ```
 
 ## Title Page Content
 
 ```
-Sales Call Evaluation Report
+AM Client Call Scorecard Report
 Confidential — For Management Review
 Date Generated: [today's date]
 Period Covered: [date range]
 Prepared for: [recipient name and title]
-Frameworks Applied: MEDDPICC (30%) · Gap Selling (30%) · The Challenger Sale (25%) · Never Split the Difference (15%)
+Scoring: Relationship Quality (20%) · Client Discovery (25%) · Value Delivery (25%) · Strategic Advancement (20%) · Client Engagement (10%)
 ```
 
 ## Summary Section (Mandatory — appears before Executive Summary)
 
 ### Overall Assessment
-2-4 paragraphs covering call quality, commercial effectiveness, deal advancement, and
-framework themes from MEDDPICC, Challenger, and Gap Selling.
+2-4 paragraphs covering call quality, client relationship quality, value delivery, and
+strategic advancement themes.
 
 ### What This Means
 - For leadership: interpretation of deal health / rep effectiveness / coaching priority
@@ -135,43 +121,38 @@ Numbered list of top 1-3 coaching priorities in order.
 
 ## Executive Summary Table Columns
 
-Rank | Rep | Avg Score | Best Call | Worst Call | Challenger Profile | Development Area
+Rank | Rep | Avg Score | Best Call | Worst Call | AM Profile | Development Area
 
 ## Individual Rep Sections
 
 Each rep section contains:
 
-1. **Profile Classification Table** (4 columns):
-   Challenger Sale Profile | MEDDPICC Maturity | Discovery Maturity | Gap Selling Quality
+1. **Profile Classification Table** (3 columns):
+   AM Profile | Relationship Depth | Key Strength
 
-2. **MEDDPICC Coverage Table** (4 columns):
-   Element | Coverage (color-coded: Strongly covered / Touched but shallow / Not covered) | Evidence | Example to Improve
+2. **Four Pillars Coverage Table** (3 columns):
+   Pillar | Coverage (Covered/Not Covered, color-coded green/red) | Evidence
 
-3. **Challenger Sale Lens Table** (3 columns):
-   Behavior (Teach/Tailor/Take Control) | Assessment (color-coded: Strong/Partial/Mostly reactive) | Evidence
+3. **Key Areas Assessment Table** (2 columns):
+   Area (Retention/Expansion/Evangelism) | Assessment
 
-4. **Gap Selling Lens Table** (2 columns):
-   Element (Current State / Future State / Problems / Business Impact / Root Causes / Gap Quality) | Assessment
-
-5. **Never Split the Difference Lens Table** (2 columns):
-   Technique (Tactical Empathy / Mirroring & Labeling / Calibrated Questions / "That's Right" Moments / Overall Voss Technique) | Assessment
-   - Overall row color-coded: Strong (green) / Some (yellow) / Minimal (red)
-
-7. **Call-by-Call Scorecard** (10 columns):
-   # | Call Title | Date | Rapport | Discovery | Value | Advancement | Control | Engagement | Total
+4. **Call-by-Call Scorecard** (8 columns):
+   # | Call Title | Date | RQ | CD | VD | SA | CE | Total
+   - Dimension abbreviations: RQ=Relationship Quality, CD=Client Discovery, VD=Value Delivery, SA=Strategic Advancement, CE=Client Engagement
    - Sort by score descending
    - Bold the top call, italic the bottom call
    - Color-code the Total column
 
-8. **Per-Call Dimension Notes**: For each call, show per-dimension "What Happened" + example quote
+5. **Per-Call Dimension Notes**: For each call, show per-dimension "What Happened" + example quote
+   - Dimension names: Relationship Quality, Client Discovery, Value Delivery, Strategic Advancement, Client Engagement
 
-9. **Strengths**: Numbered list, 2-3 items, each with transcript evidence
+6. **Strengths**: Numbered list, 2-3 items, each with transcript evidence
 
-10. **Development Opportunities**: Numbered list, 2-3 items, each with gap + coaching action + coaching example (Observed → Stronger version)
+7. **Development Opportunities**: Numbered list, 2-3 items, each with gap + coaching action + coaching example (Observed → Stronger version)
 
-11. **Best Call Highlight**: 1-2 paragraph deep dive
+8. **Best Call Highlight**: 1-2 paragraph deep dive
 
-12. **Coaching Action Plan**:
+9. **Coaching Action Plan**:
     - Keep Doing (2-3 bullets)
     - Start Doing (2-3 bullets with specific language)
     - Stop Doing (1-2 bullets)
@@ -181,8 +162,8 @@ Each rep section contains:
 1. **All Calls Ranked** (7 columns):
    Rank | Rep | Call Title | Date | Score | Top Dimension | Weakest Dimension
 
-2. **Team MEDDPICC Heatmap** (1 + N columns):
-   Element | [Rep 1] | [Rep 2] | ... — all color-coded by frequency
+2. **Team Four Pillars Heatmap** (1 + N columns):
+   Pillar (KDM / CS / AV / PR) | [Rep 1] | [Rep 2] | ... — all color-coded by coverage (green=covered, red=not covered)
 
 3. **Best Practices to Share**: Numbered list of top calls for team review
 

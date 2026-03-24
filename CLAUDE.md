@@ -2,7 +2,7 @@
 
 ## What This Is
 
-This repo contains the weekly Ocrolus AM (Account Manager) sales call scorecard — an HTML dashboard hosted via GitHub Pages at `index.html`. It displays scored Gong sales calls for three reps, with per-call breakdowns, coaching notes, MEDDPICC coverage, and cross-rep comparisons.
+This repo contains the weekly Ocrolus AM (Account Manager) client call scorecard — an HTML dashboard hosted via GitHub Pages at `index.html`. It displays scored Gong client calls for three AMs, with per-call breakdowns, coaching notes, Four Pillars coverage, and cross-rep comparisons.
 
 The scorecard is updated weekly (typically Sundays) and shared with sales leadership via a permanent Google Drive URL and Slack.
 
@@ -22,41 +22,79 @@ The scorecard is updated weekly (typically Sundays) and shared with sales leader
 - Filter defaults: `scope = "External"`, `direction = "Conference"`, `duration > 600` seconds
 - Users endpoint paginates at 100 per page; all three reps are known IDs above
 
-## Scoring Framework (v9)
+## Scoring Framework (AM Scorecard v1)
 
-Four frameworks, weighted:
+### Two-Layer Scoring Model
 
-| Framework | Weight | Primary Influence |
-|-----------|--------|-------------------|
-| MEDDPICC | 30% | Discovery depth, qualification rigor, deal mechanics |
-| Gap Selling | 30% | Problem diagnosis, current/future state, business impact |
-| The Challenger Sale | 25% | Value delivery, commercial teaching, process control |
-| Never Split the Difference (Voss) | 15% | Tactical empathy, rapport, engagement, negotiation |
+The AM Scorecard uses a two-layer approach:
+1. **Four Pillars of Success** — binary (yes/no) tracking per call (did it happen?)
+2. **Five Scoring Dimensions** — 1-10 scale per call (how well did the AM perform?)
 
-### Six Scoring Dimensions (1-10 scale)
+Plus:
+3. **Three Key Areas** — tagged per call (which areas were advanced?)
+
+### Four Pillars of Success (Binary per Call)
+
+| Pillar | Key | What to Look For |
+|--------|-----|-----------------|
+| Key Decision Maker | KDM | Was the call held with someone who has authority over budget, renewal, or strategic direction? |
+| Client Success | CS | Did the AM discuss whether Ocrolus is helping the client achieve their goals/find success? |
+| Additional Value | AV | Did the AM explore ways to bring more value (new features, use cases, expanded usage)? |
+| Product Roadmap | PR | Did the AM discuss Ocrolus product roadmap, upcoming features, or product direction? |
+
+Tracked as 1 (covered) or 0 (not covered) per call. Displayed as a heatmap across calls.
+
+### Five Scoring Dimensions (1-10 scale)
 
 ```
-Weighted Score = (Rapport × 0.10) + (Discovery × 0.30) + (Value × 0.15) +
-                 (Advancement × 0.20) + (Control × 0.10) + (Engagement × 0.15)
+Weighted Score = (Relationship Quality × 0.20) + (Client Discovery × 0.25) +
+                 (Value Delivery × 0.25) + (Strategic Advancement × 0.20) +
+                 (Client Engagement × 0.10)
 ```
 
 | Dimension | Weight | What It Measures |
 |-----------|--------|------------------|
-| Rapport & Connection | 10% | Opening quality, tactical empathy, mirroring, labeling |
-| Discovery & Qualification | 30% | MEDDPICC coverage, Gap Selling diagnosis, calibrated questions |
-| Value Articulation | 15% | Challenger teach/tailor, ROI framing, proof points |
-| Deal Advancement | 20% | Next steps, mutual action plan, take control behaviors |
-| Call Control & Structure | 10% | Agenda, transitions, talk ratio, redirection |
-| Prospect Engagement | 15% | Buying signals, "that's right" moments, voluntary elaboration |
+| Relationship Quality | 20% | Rapport, trust signals, multi-threading, stakeholder awareness, tactical empathy |
+| Client Discovery | 25% | Uncovering client health, satisfaction, pain points, usage patterns, business changes |
+| Value Delivery | 25% | ROI validation, demonstrating ongoing value, teaching/advising, best practice sharing |
+| Strategic Advancement | 20% | Next steps, action items, expansion signals, roadmap alignment, mutual planning |
+| Client Engagement | 10% | Client energy, voluntary elaboration, positive signals, advocacy indicators |
 
-### v9 MEDDPICC Philosophy
+### Three Key Areas (Tags per Call)
 
-MEDDPICC is a **multi-call** framework, not a single-call checklist. Reps are expected to cover 2-4 elements per call based on stage:
-- Early: Pain, Metrics, Decision Process
-- Mid: Economic Buyer, Decision Criteria, Champion
-- Late: Competition, validation of prior elements
+Each call is tagged with which areas were actively advanced:
+
+| Area | Color | What It Means on a Call |
+|------|-------|------------------------|
+| Retention | Green | AM validated client health, addressed concerns, confirmed value realization, strengthened relationship |
+| Expansion | Blue | AM identified upsell/cross-sell opportunities, explored new use cases, discussed volume growth |
+| Evangelism | Purple | AM cultivated advocacy — references, case studies, peer introductions, event participation |
+
+### AM Profile Classification
+
+| Profile | Description |
+|---------|-------------|
+| Trusted Advisor | Deep strategic relationship, proactive guidance, client views AM as partner |
+| Relationship Builder | Strong rapport, responsive, but may miss strategic/expansion opportunities |
+| Problem Solver | Excellent at reactive support, but doesn't proactively advance the account |
+| Account Grower | Strong expansion instincts, identifies opportunities, drives revenue growth |
+| Caretaker | Maintains status quo, keeps client satisfied but doesn't advance the relationship |
+
+### Four Pillars Philosophy
+
+The Four Pillars are **not a single-call checklist**. AMs should cover 2-3 pillars per call based on the client relationship stage and call purpose:
+- Regular check-ins: Client Success + Additional Value
+- QBRs/strategic reviews: All four pillars
+- Product-focused calls: Product Roadmap + Additional Value
+- Escalation/issue calls: Client Success + Key Decision Maker
 
 Score **depth over breadth**. Pattern-level gaps (across multiple calls) matter more than single-call gaps.
+
+### Epistemic Humility
+
+- AI has transcripts only — no tone, body language, account history, or relationship context
+- Low-confidence feedback must be excluded
+- Use "the transcript shows" not "the AM felt"
 
 ## Transcript Processing
 
@@ -66,20 +104,21 @@ Score **depth over breadth**. Pattern-level gaps (across multiple calls) matter 
 python3 scripts/process_transcript.py <raw_transcript.json> <summary_output.json>
 ```
 
-The processor extracts: opening/middle/pricing/next-steps/closing segments, speaker talk ratios, rep questions, prospect positive signals. It condenses large transcripts into a workable scoring summary.
+The processor extracts: opening/middle/closing segments, speaker talk ratios, AM questions, client positive signals (including retention, expansion, and advocacy indicators). It condenses large transcripts into a workable scoring summary.
 
 ## HTML Dashboard Structure
 
 `index.html` is a single-file HTML dashboard with embedded CSS and JS. Key sections:
 - Header with version, date range, and rep count
 - Per-rep cards with scored calls, dimension breakdowns, coaching notes
-- MEDDPICC coverage heatmaps (color-coded: green/yellow/red)
+- Four Pillars coverage heatmaps (color-coded: green/gray)
+- Key Area tags per call (Retention/Expansion/Evangelism)
 - Cross-rep comparison and team-level insights
-- Footer with rubric version and framework weights
+- Footer with rubric version and dimension weights
 
 ### Design Conventions
 - Color palette: dark blue (#1F3864), medium blue (#2E75B6), green (#C6EFCE), yellow (#FFEB9C), red (#FFC7CE)
-- Score color logic: ≥8.0 green, 5.0-7.99 yellow, <5.0 red
+- Score color logic: ≥8.5 green, 7.5-8.49 blue, <7.5 yellow
 - All data is embedded inline (no external API calls from the HTML)
 - Mobile-responsive layout
 
@@ -89,7 +128,7 @@ The processor extracts: opening/middle/pricing/next-steps/closing segments, spea
 2. Filter by rep user IDs, external scope, >10 min duration
 3. Pull transcripts one at a time via `getCallTranscripts`
 4. Process each through `scripts/process_transcript.py`
-5. Score each call against the 6 dimensions
+5. Score each call against the 5 dimensions + 4 Pillars + 3 Key Areas
 6. Update `index.html` with new call data
 7. Git commit and push
 
@@ -108,14 +147,13 @@ Confirmed Ocrolus Slack user IDs for scorecard distribution:
 ## File Structure
 
 ```
-AE-Scorecard/
+AM-Scorecard/
 ├── CLAUDE.md                          ← This file (project context for Claude Code)
 ├── index.html                         ← The HTML dashboard (main deliverable)
 ├── scripts/
 │   ├── process_transcript.py          ← Mandatory transcript processor
 │   └── generate_docx_template.js      ← DOCX report generator template
-├── CHANGELOG.md                       ← Version history (v7 → v8 → v9)
-├── AE-Scorer_v9.skill                 ← Current skill file (ZIP archive)
+├── CHANGELOG.md                       ← Version history
 └── references/
     └── docx_format.md                 ← DOCX formatting specification
 ```
