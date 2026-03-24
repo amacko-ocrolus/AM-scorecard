@@ -25,6 +25,8 @@ The scorecard evaluates AM client calls across three layers:
 | Anjelica Purnell | Account Manager |
 | Noah Jones | Account Manager |
 | Elizabeth Spade | Account Manager |
+| Madeline Mazzella | Account Manager |
+| Spencer Schultz | Account Manager |
 
 ## Weekly Update Workflow
 
@@ -44,7 +46,9 @@ AM-Scorecard/
 ├── scripts/
 │   ├── process_transcript.py          ← Transcript processor (run before scoring)
 │   └── generate_docx_template.js      ← DOCX report generator
-├── score.js                           ← Scoring logic
+├── score.js                           ← Automated scoring pipeline (Gong → Claude → dashboard)
+├── .github/workflows/
+│   └── weekly-scorecard.yml           ← GitHub Actions: runs every Sunday at 2 PM ET
 ├── CLAUDE.md                          ← Project context for Claude Code
 ├── CHANGELOG.md                       ← Version history
 └── references/
