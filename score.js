@@ -457,7 +457,7 @@ function buildSlackMessage(repsData, allCalls) {
   if (mGaps.M < totalCalls * 0.5) msg += `• *Metrics* — ROI quantified in only ${mGaps.M} of ${totalCalls} calls.\n`;
   if (mGaps.E < totalCalls * 0.5) msg += `• *Economic Buyer* — Identified in only ${mGaps.E} of ${totalCalls} calls.\n`;
   
-  msg += `\n---\n\n🔗 *<https://vdua-ocrolus.github.io/AE-scorecard/|Open Full Interactive Dashboard>* — works on desktop and mobile\n\n_Scored via Gong Call Scorer v7 · 6-Dimension Rubric · 4 frameworks_`;
+  msg += `\n---\n\n🔗 *<https://amacko-ocrolus.github.io/AM-scorecard/|Open Full Interactive Dashboard>* — works on desktop and mobile\n\n_Scored via AM Scorecard v1 · 5-Dimension Rubric · Four Pillars_`;
   
   return msg;
 }
