@@ -156,20 +156,13 @@ async function getCalls(fromDate, toDate) {
   let allCalls = [];
   let cursor = "";
   do {
-    const result = await gongRequest("/calls/extensive", {
-      filter: {
-        fromDateTime: fromDate,
-        toDateTime: toDate,
-        workspaceId: WORKSPACE_ID,
-        scope: "External",
-        direction: "Conference",
-      },
-      cursor,
-    });
+    const body = { filter: { fromDateTime: fromDate, toDateTime: toDate, workspaceId: WORKSPACE_ID } };
+    if (cursor) body.cursor = cursor;
+    const result = await gongRequest("/calls", body);
     const batch = result.calls || [];
     allCalls = allCalls.concat(batch);
     cursor = result.records?.cursor || "";
-    console.log(`   Fetched ${batch.length} calls (total so far: ${allCalls.length})${cursor ? ", fetching next page..." : ""}`);
+    console.log(`   Fetched ${batch.length} calls (total so far: ${allCalls.length}, totalRecords: ${result.records?.totalRecords || "?"})${cursor ? ", fetching next page..." : ""}`);
   } while (cursor);
   return allCalls;
 }
@@ -537,18 +530,66 @@ async function main() {
   const allGongCalls = await getCalls(fromDate, toDate);
   console.log(`   Found ${allGongCalls.length} total calls`);
 
+  // Diagnostic: log first call structure to verify field names
+  if (allGongCalls.length > 0) {
+    const sample = allGongCalls[0];
+    console.log(`   Sample call keys: ${Object.keys(sample).join(", ")}`);
+    console.log(`   Sample call: id=${sample.id}, primaryUserId=${sample.primaryUserId}, scope=${sample.scope}, direction=${sample.direction}, duration=${sample.duration}`);
+    // If fields are nested under metaData, log that too
+    if (sample.metaData) {
+      console.log(`   metaData keys: ${Object.keys(sample.metaData).join(", ")}`);
+      console.log(`   metaData: id=${sample.metaData.id}, primaryUserId=${sample.metaData.primaryUserId}, scope=${sample.metaData.scope}, direction=${sample.metaData.direction}, duration=${sample.metaData.duration}`);
+    }
+  } else {
+    console.log("   WARNING: Gong API returned 0 calls for this date range and workspace.");
+  }
+
+  // Diagnostic: log unique scopes, directions, and user IDs in the results
+  if (allGongCalls.length > 0) {
+    const scopes = [...new Set(allGongCalls.map(c => c.scope || c.metaData?.scope))];
+    const directions = [...new Set(allGongCalls.map(c => c.direction || c.metaData?.direction))];
+    const userIds = [...new Set(allGongCalls.map(c => c.primaryUserId || c.metaData?.primaryUserId))];
+    console.log(`   Unique scopes: ${JSON.stringify(scopes)}`);
+    console.log(`   Unique directions: ${JSON.stringify(directions)}`);
+    console.log(`   Unique primaryUserIds (${userIds.length}): ${userIds.slice(0, 10).join(", ")}${userIds.length > 10 ? "..." : ""}`);
+    console.log(`   Rep gongIds we're looking for: ${REPS.map(r => r.gongId).join(", ")}`);
+
+    // Check if calls might be nested under metaData
+    const hasMetaData = allGongCalls[0].metaData != null;
+    if (hasMetaData) {
+      console.log("   NOTE: Call data is nested under metaData — normalizing...");
+    }
+  }
+
+  // Normalize calls: if data is nested under metaData, flatten it
+  const normalizedCalls = allGongCalls.map(c => {
+    if (c.metaData) {
+      return { ...c.metaData, parties: c.parties, content: c.content };
+    }
+    return c;
+  });
+
   // Step 2: Filter and score for each rep
   const repResults = [];
   const client = new Anthropic();
 
   for (const rep of REPS) {
-    console.log(`\nProcessing ${rep.name}...`);
+    console.log(`\nProcessing ${rep.name} (gongId: ${rep.gongId})...`);
 
-    const repCalls = allGongCalls.filter(
+    const repCalls = normalizedCalls.filter(
       (c) =>
         c.primaryUserId === rep.gongId &&
+        c.scope === "External" &&
+        c.direction === "Conference" &&
         c.duration >= MIN_DURATION
     );
+
+    // Diagnostic: show why calls might be filtered out
+    const byUser = normalizedCalls.filter(c => c.primaryUserId === rep.gongId);
+    if (byUser.length > 0 && repCalls.length === 0) {
+      console.log(`   Found ${byUser.length} calls for this user, but filtered out by scope/direction/duration:`);
+      byUser.slice(0, 3).forEach(c => console.log(`      scope=${c.scope}, direction=${c.direction}, duration=${c.duration}s, title=${c.title}`));
+    }
 
     console.log(`   ${repCalls.length} qualifying calls`);
 
