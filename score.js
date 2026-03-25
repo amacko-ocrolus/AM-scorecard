@@ -382,21 +382,34 @@ function injectDashboardData(repResults, weekLabel) {
   // Inject data into HTML by replacing the JS variable declarations
   let updated = html;
 
+  // Validate that patterns exist before replacing
+  const patterns = {
+    reps: /const reps=\[[\s\S]*?\];/,
+    calls: /const calls=\[[\s\S]*?\];/,
+    coaching: /const coaching=\{[\s\S]*?\};/,
+    history: /const history=\[[\s\S]*?\];/,
+  };
+  for (const [name, pat] of Object.entries(patterns)) {
+    if (!pat.test(html)) {
+      console.error(`   WARNING: Could not find ${name} pattern in index.html — data will NOT be injected`);
+    }
+  }
+
   // Replace reps array
   updated = updated.replace(
     /const reps=\[[\s\S]*?\];/,
     `const reps=${JSON.stringify(repsData)};`
   );
 
-  // Replace calls array (match from "const calls=[" to the next "];" accounting for nested arrays)
+  // Replace calls array
   updated = updated.replace(
-    /const calls=\[[\s\S]*?\n\];/,
+    /const calls=\[[\s\S]*?\];/,
     `const calls=${JSON.stringify(allCalls)};`
   );
 
   // Replace coaching object
   updated = updated.replace(
-    /const coaching=\{[\s\S]*?\n\};/,
+    /const coaching=\{[\s\S]*?\};/,
     `const coaching=${JSON.stringify(coaching)};`
   );
 
