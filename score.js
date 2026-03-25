@@ -259,6 +259,7 @@ ${processedTranscript.positiveSignals.join("\n")}`;
     const response = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
+      temperature: 0,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -338,6 +339,7 @@ async function injectDashboardData(repResults, weekLabel, client) {
         const synthResponse = await client.messages.create({
           model: "claude-sonnet-4-20250514",
           max_tokens: 600,
+          temperature: 0,
           messages: [{ role: "user", content: `You are writing a concise weekly summary for a sales leadership dashboard. Synthesize these per-call narratives and coaching notes into ONE tight paragraph (4-6 sentences max). Lead with the overall pattern for the week, highlight 1-2 standout moments, and end with the single most important coaching point. Do not list every call — distill the themes. Use "the transcript shows" language. No fluff, no filler, executive-level brevity.
 
 Rep: ${rep.name} (${rep.calls.length} calls this week)
