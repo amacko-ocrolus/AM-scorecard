@@ -32,9 +32,9 @@ const REPS = [
 const WORKSPACE_ID = "509723422617923879";
 const MIN_DURATION = 300; // 5 minutes minimum
 
-// Call title patterns to exclude — these are not standard AM client relationship calls
-// Case-insensitive match against call title. Keeps: QBRs, escalations, onboarding, regular check-ins.
-const EXCLUDE_TITLE_PATTERNS = /\b(training\s+session|product\s+demo|demo\s+call|support\s+ticket|troubleshoot|internal\s+sync|team\s+sync|1[:\-]1|one[\-\s]on[\-\s]one|pipeline\s+review|handoff|hand[\-\s]off|transition\s+call|POV|proof\s+of\s+value|pilot\s+review|pilot\s+call|trial\s+eval)/i;
+// Call title patterns to exclude — non-scorable AM calls
+// Keeps: QBRs, escalations, onboarding, demos, support/troubleshooting, regular check-ins
+const EXCLUDE_TITLE_PATTERNS = /\b(training\s+session|internal\s+sync|team\s+sync|1[:\-]1|one[\-\s]on[\-\s]one|pipeline\s+review|handoff|hand[\-\s]off|transition\s+call|POV|proof\s+of\s+value|pilot\s+review|pilot\s+call|trial\s+eval|kickoff|kick[\-\s]off)/i;
 
 // AM Scorecard v1 — Two-Layer Scoring Model
 // Layer 1: Five Scoring Dimensions (1-10 scale)
