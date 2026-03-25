@@ -273,7 +273,7 @@ ${processedTranscript.positiveSignals.join("\n")}`;
 
 // ─── Dashboard Data Injection ────────────────────────────────────────────────
 
-function injectDashboardData(repResults, weekLabel) {
+async function injectDashboardData(repResults, weekLabel, client) {
   const html = fs.readFileSync("index.html", "utf-8");
 
   // Build calls array matching index.html's expected structure
@@ -314,7 +314,7 @@ function injectDashboardData(repResults, weekLabel) {
       id: rep.repId,
       name: rep.name,
       title: rep.title,
-      profile: repCalls.length > 0 ? mostCommon(repCalls.map(c => c.score?.profile).filter(Boolean)) : "",
+      profile: rep.calls.length > 0 ? mostCommon(rep.calls.map(c => c.score?.profile).filter(Boolean)) : "",
       avg,
       n: repCalls.length,
     });
@@ -685,7 +685,7 @@ async function main() {
 
   // Step 3: Inject data into existing index.html
   console.log("\nInjecting data into dashboard...");
-  const { html, repsData, allCalls } = injectDashboardData(repResults, weekLabel);
+  const { html, repsData, allCalls } = await injectDashboardData(repResults, weekLabel, client);
   fs.writeFileSync("index.html", html);
   console.log("   index.html updated");
 
