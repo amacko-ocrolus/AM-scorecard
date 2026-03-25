@@ -21,7 +21,9 @@ The scorecard is updated weekly (typically Sundays) and shared with sales leader
 - **Workspace ID**: 509723422617923879
 - **getCalls** requires explicit workspace ID and date range in ISO 8601 with timezone offset (e.g., `2026-03-09T00:00:00-05:00`)
 - **getCallTranscripts** must be fetched one call at a time: `filter: { callIds: ["<single_id>"] }` (bulk fetches exceed size limits)
-- Filter defaults: `scope = "External"`, `direction = "Conference"`, `duration > 600` seconds
+- Filter defaults: `scope = "External"`, `direction = "Conference"`, `duration > 300` seconds (5 min minimum)
+- Title-based exclusions: training sessions, product demos, support tickets, troubleshooting, internal syncs, team syncs, 1:1s, pipeline reviews, handoffs, transitions, POV/proof of value, pilot calls, trial evaluations
+- Calls that ARE scored: regular client check-ins, QBRs/business reviews, escalations, onboarding/kickoff calls, expansion discussions
 - Users endpoint paginates at 100 per page; all five reps are known IDs above
 
 ## Scoring Framework (AM Scorecard v1)
