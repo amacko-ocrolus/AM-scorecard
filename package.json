@@ -1,7 +1,7 @@
 {
-  "name": "ae-scorecard",
+  "name": "am-scorecard",
   "version": "1.0.0",
-  "description": "Weekly AE Call Scorecard - automated via GitHub Actions",
+  "description": "Weekly AM Call Scorecard - automated via GitHub Actions",
   "private": true,
   "scripts": {
     "score": "node score.js"

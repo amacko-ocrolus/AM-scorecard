@@ -100,8 +100,8 @@ function render(){
 const el=document.getElementById("app");
 const f=calls.filter(c=>c.rep===st.rep);
 const rd=reps.find(r=>r.id===st.rep);
-const avg=(f.reduce((a,c)=>a+c.w,0)/f.length).toFixed(2);
-const best=f.reduce((a,c)=>c.w>a.w?c:a,f[0]);
+const avg=f.length?(f.reduce((a,c)=>a+c.w,0)/f.length).toFixed(2):"—";
+const best=f.length?f.reduce((a,c)=>c.w>a.w?c:a,f[0]):null;
 const det=st.sel?calls.find(c=>c.id===st.sel):null;
 const co=coaching[st.rep];
 let h="";
@@ -122,8 +122,8 @@ h+=`</div>`;
 
 // KPIs
 h+=`<div class="kpi-grid">`;
-h+=`<div class="card kpi"><div class="label mono">Avg Score</div><div style="font-size:24px;font-weight:700;color:${sc(parseFloat(avg))}">${avg}</div></div>`;
-h+=`<div class="card kpi"><div class="label mono">Best Call</div><div style="font-size:24px;font-weight:700;color:#3b82f6">${best.w}</div></div>`;
+h+=`<div class="card kpi"><div class="label mono">Avg Score</div><div style="font-size:24px;font-weight:700;color:${avg==="—"?"#475569":sc(parseFloat(avg))}">${avg}</div></div>`;
+h+=`<div class="card kpi"><div class="label mono">Best Call</div><div style="font-size:24px;font-weight:700;color:${best?sc(best.w):"#475569"}">${best?best.w:"—"}</div></div>`;
 h+=`<div class="card kpi"><div class="label mono">Calls</div><div style="font-size:24px;font-weight:700;color:#8b5cf6">${f.length}</div></div>`;
 h+=`<div class="card kpi"><div class="label mono">Profile</div><div style="font-size:15px;font-weight:700;color:#f59e0b">${rd.profile}</div></div>`;
 h+=`</div>`;
@@ -229,8 +229,8 @@ h+=`</tbody></table></div>`;
 h+=`<div class="card"><div class="mono" style="font-size:10px;font-weight:600;color:#93c5fd;margin-bottom:10px;letter-spacing:1px">WEEKLY TREND</div>`;
 h+=`<div style="display:flex;align-items:end;gap:8px;height:60px;padding:0 4px">`;
 repHist.forEach((w,i)=>{
-const pct=((w.avg-5)/5)*100;
-h+=`<div style="flex:1;text-align:center"><div style="height:${Math.max(pct,10)}%;background:${sc(w.avg)};border-radius:3px 3px 0 0;min-height:8px;margin:0 auto;max-width:40px;position:relative;height:${pct}px">`;
+const pct=Math.max(((w.avg-5)/5)*100,5);
+h+=`<div style="flex:1;text-align:center"><div style="height:${pct}%;background:${sc(w.avg)};border-radius:3px 3px 0 0;min-height:8px;margin:0 auto;max-width:40px;position:relative">`;
 h+=`<div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:600;color:${sc(w.avg)}">${w.avg}</div>`;
 h+=`</div><div class="mono" style="font-size:8px;color:#475569;margin-top:4px">${w.weekOf.slice(5)}</div></div>`;
 });
@@ -255,7 +255,7 @@ if(det){
 h+=`<button class="vtab mono" onclick="st.sel=null;render()" style="margin-bottom:10px">← Back</button>`;
 h+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:14px"><div><h2 style="font-size:16px;font-weight:700"><a href="${det.url}" target="_blank" style="color:#e2e8f0;text-decoration:none;border-bottom:1px solid #3b82f6;padding-bottom:1px;transition:color .15s" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#e2e8f0'">${det.title} ↗</a></h2><div style="font-size:11px;color:#64748b;margin-top:2px">${det.prospect} · ${det.date} · ${det.dur} · ${det.type}</div><div style="font-size:10px;color:#475569">Talk: <span style="color:${det.tr<=60?"#10b981":"#f59e0b"}">${det.tr}%</span></div></div><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:${sc(det.w)}">${det.w}</div><div class="mono" style="font-size:9px;color:#475569">WEIGHTED</div></div></div>`;
 DK.forEach(d=>{
-const s=det.s[d];const bg=s>=8?"#10b981":s>=7?"#f59e0b":"#ef4444";
+const s=det.s[d];const bg=sc(s);
 h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0"><span style="font-size:11px;color:#94a3b8;min-width:110px">${DL[d]} <span style="color:#475569;font-size:9px">(${DW[d]})</span></span><div style="display:flex;align-items:center;gap:6px"><div class="bar"><div class="fill" style="width:${s*10}%;background:${bg}"></div></div><span style="font-size:11px;font-weight:600;color:${bg};min-width:20px">${s}</span></div></div>`;
 });
 h+=`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">`;
@@ -275,7 +275,7 @@ if(det.q){h+=`<div class="card"><div class="mono" style="font-size:10px;font-wei
 h+=`<a href="${det.url}" target="_blank" class="mono" style="font-size:10px;display:inline-block;margin-top:8px">View in Gong →</a>`;
 }
 
-h+=`<div style="margin-top:20px;text-align:center;font-size:9px;color:#1e293b" class="mono">AM Scorecard v1 · RQ 20% · CD 25% · VD 25% · SA 20% · CE 10% · ${calls.length} calls · 3 reps</div>`;
+h+=`<div style="margin-top:20px;text-align:center;font-size:9px;color:#1e293b" class="mono">AM Scorecard v1 · RQ 20% · CD 25% · VD 25% · SA 20% · CE 10% · ${calls.length} calls · ${reps.length} reps</div>`;
 el.innerHTML=h;
 }
 render();
