@@ -68,12 +68,12 @@ Note: AMs should cover 2-3 pillars per call based on the client relationship sta
 - Expansion: AM identified upsell/cross-sell opportunities, explored new use cases, discussed volume growth
 - Advocacy: AM cultivated advocacy — references, case studies, peer introductions, event participation
 
-### AM Profile Classification
-- Trusted Advisor: Deep strategic relationship, proactive guidance, client views AM as partner
-- Relationship Builder: Strong rapport, responsive, but may miss strategic/expansion opportunities
-- Problem Solver: Excellent at reactive support, but doesn't proactively advance the account
-- Account Grower: Strong expansion instincts, identifies opportunities, drives revenue growth
-- Caretaker: Maintains status quo, keeps client satisfied but doesn't advance the relationship
+### AM Profile Classification (choose ONE based on the dominant pattern in THIS call)
+- Trusted Advisor: The AM proactively guided the conversation, offered strategic insights, challenged the client's thinking, or positioned themselves as a partner (not just a vendor). Look for: unsolicited recommendations, forward-looking strategy, mutual planning, or the client seeking the AM's opinion on business decisions.
+- Relationship Builder: The AM demonstrated strong rapport and responsiveness — warm conversation, personal connection, active listening — but did NOT meaningfully advance expansion, strategy, or next steps. Look for: high Relationship Quality scores but lower Strategic Advancement or Value Delivery.
+- Problem Solver: The AM was primarily reactive — the client brought issues and the AM resolved or triaged them. The AM did NOT proactively explore new topics, ask discovery questions, or advance the account beyond the issue at hand. Look for: troubleshooting-heavy calls, support-oriented discussions, low Client Discovery scores.
+- Account Grower: The AM actively pursued expansion — new use cases, volume growth, cross-sell, or upsell. Look for: the AM introducing new Ocrolus capabilities, asking about adjacent workflows, quantifying growth potential, or discussing pricing/packaging for additional services.
+- Caretaker: The AM maintained status quo — the call was a routine check-in with no meaningful discovery, no value articulation, and no forward momentum. Look for: short, surface-level conversations, generic "everything good?" questions, no concrete next steps.
 
 ## Coaching Principles
 - Keep/Start/Stop = ONE item each — the single highest-impact action, not a list
@@ -103,7 +103,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
   "talkRatio": N,
   "pillars": {"KDM": 0or1, "CS": 0or1, "AV": 0or1, "PR": 0or1},
   "keyAreas": ["Retention" and/or "Expansion" and/or "Advocacy"],
-  "profile": "Trusted Advisor|Relationship Builder|Problem Solver|Account Grower|Caretaker",
+  "profile": "Trusted Advisor|Relationship Builder|Problem Solver|Account Grower|Caretaker (pick the ONE that best describes the AM's dominant behavior on THIS call based on the classification criteria above)",
   "strengths": ["specific strength with evidence from the transcript", "second strength"],
   "opportunities": ["specific opportunity with coaching suggestion", "second opportunity"],
   "keyQuote": "notable client quote from the transcript or empty string",
