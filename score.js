@@ -30,7 +30,11 @@ const REPS = [
 ];
 
 const WORKSPACE_ID = "509723422617923879";
-const MIN_DURATION = 600; // 10 minutes minimum
+const MIN_DURATION = 300; // 5 minutes minimum
+
+// Call title patterns to exclude — non-scorable AM calls
+// Keeps: QBRs, escalations, onboarding, demos, support/troubleshooting, regular check-ins
+const EXCLUDE_TITLE_PATTERNS = /\b(training\s+session|internal\s+sync|team\s+sync|1[:\-]1|one[\-\s]on[\-\s]one|pipeline\s+review|handoff|hand[\-\s]off|transition\s+call|POV|proof\s+of\s+value|pilot\s+review|pilot\s+call|trial\s+eval|kickoff|kick[\-\s]off)/i;
 
 // AM Scorecard v1 — Two-Layer Scoring Model
 // Layer 1: Five Scoring Dimensions (1-10 scale)
@@ -615,22 +619,30 @@ async function main() {
   for (const rep of REPS) {
     console.log(`\nProcessing ${rep.name} (gongId: ${rep.gongId})...`);
 
-    const repCalls = normalizedCalls.filter(
+    const byUser = normalizedCalls.filter(c => c.primaryUserId === rep.gongId);
+    const afterBasic = byUser.filter(
       (c) =>
-        c.primaryUserId === rep.gongId &&
         c.scope === "External" &&
         c.direction === "Conference" &&
         c.duration >= MIN_DURATION
     );
 
-    // Diagnostic: show why calls might be filtered out
-    const byUser = normalizedCalls.filter(c => c.primaryUserId === rep.gongId);
-    if (byUser.length > 0 && repCalls.length === 0) {
+    // Apply title-based exclusions and log what gets filtered
+    const excluded = afterBasic.filter(c => EXCLUDE_TITLE_PATTERNS.test(c.title || ""));
+    const repCalls = afterBasic.filter(c => !EXCLUDE_TITLE_PATTERNS.test(c.title || ""));
+
+    if (excluded.length > 0) {
+      console.log(`   Excluded ${excluded.length} call(s) by title:`);
+      excluded.forEach(c => console.log(`      ✗ "${c.title}" (${Math.round(c.duration / 60)}m) — matched exclusion pattern`));
+    }
+
+    // Diagnostic: show why calls might be filtered out at the basic level
+    if (byUser.length > 0 && afterBasic.length === 0) {
       console.log(`   Found ${byUser.length} calls for this user, but filtered out by scope/direction/duration:`);
       byUser.slice(0, 3).forEach(c => console.log(`      scope=${c.scope}, direction=${c.direction}, duration=${c.duration}s, title=${c.title}`));
     }
 
-    console.log(`   ${repCalls.length} qualifying calls`);
+    console.log(`   ${repCalls.length} qualifying calls (${byUser.length} total, ${byUser.length - afterBasic.length} filtered by scope/direction/duration, ${excluded.length} excluded by title)`);
 
     const scoredCalls = [];
 
