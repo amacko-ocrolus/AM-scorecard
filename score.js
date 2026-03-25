@@ -320,7 +320,7 @@ function injectDashboardData(repResults, weekLabel) {
     });
   }
 
-  // Build coaching object
+  // Build coaching object — synthesize a concise weekly summary per rep
   const coaching = {};
   for (const rep of repResults) {
     const strengths = rep.calls.flatMap(c => c.score?.strengths || []);
@@ -329,13 +329,37 @@ function injectDashboardData(repResults, weekLabel) {
     const coachingNotes = rep.calls.map(c => c.score?.coaching || "").filter(Boolean);
     const pillarNotes = rep.calls.map(c => c.score?.pillarCoaching || "").filter(Boolean);
 
-    const weekNarrative = narratives.join("<br><br>");
-    const weekCoaching = coachingNotes.join("<br><br>");
+    let weekSummary = `${rep.name} had ${rep.calls.length} qualifying calls this week.`;
+
+    // Synthesize a concise weekly narrative via Claude instead of concatenating every per-call paragraph
+    if (narratives.length > 0) {
+      try {
+        console.log(`   Synthesizing weekly summary for ${rep.name}...`);
+        const synthResponse = await client.messages.create({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 600,
+          messages: [{ role: "user", content: `You are writing a concise weekly summary for a sales leadership dashboard. Synthesize these per-call narratives and coaching notes into ONE tight paragraph (4-6 sentences max). Lead with the overall pattern for the week, highlight 1-2 standout moments, and end with the single most important coaching point. Do not list every call — distill the themes. Use "the transcript shows" language. No fluff, no filler, executive-level brevity.
+
+Rep: ${rep.name} (${rep.calls.length} calls this week)
+
+Per-call narratives:
+${narratives.map((n, i) => `Call ${i + 1}: ${n}`).join("\n")}
+
+Per-call coaching:
+${coachingNotes.map((c, i) => `Call ${i + 1}: ${c}`).join("\n")}
+
+Respond with ONLY the summary paragraph, no JSON, no markdown.` }],
+        });
+        weekSummary = synthResponse.content[0]?.text?.trim() || weekSummary;
+      } catch (e) {
+        console.error(`   Weekly synthesis failed for ${rep.name}: ${e.message}`);
+        // Fallback: use first narrative + first coaching note
+        weekSummary = narratives[0] + (coachingNotes[0] ? `<br><br><strong style="color:#93c5fd">Coaching:</strong> ${coachingNotes[0]}` : "");
+      }
+    }
 
     coaching[rep.repId] = {
-      narrative: weekNarrative
-        ? `${weekNarrative}<br><br><strong style="color:#93c5fd">Coaching Notes:</strong> ${weekCoaching || "No specific coaching notes this week."}`
-        : `${rep.name} had ${rep.calls.length} qualifying calls this week.`,
+      narrative: weekSummary,
       keep: strengths[0] || "No data this week.",
       start: opps[0] || "No data this week.",
       stop: opps[1] || "Review needed.",
