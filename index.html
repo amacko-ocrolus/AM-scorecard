@@ -126,6 +126,7 @@ h+=`<div class="card kpi"><div class="label mono">Avg Score</div><div style="fon
 h+=`<div class="card kpi"><div class="label mono">Best Call</div><div style="font-size:24px;font-weight:700;color:${best?sc(best.w):"#475569"}">${best?best.w:"—"}</div></div>`;
 h+=`<div class="card kpi"><div class="label mono">Calls</div><div style="font-size:24px;font-weight:700;color:#8b5cf6">${f.length}</div></div>`;
 h+=`<div class="card kpi"><div class="label mono">Profile</div><div style="font-size:15px;font-weight:700;color:#f59e0b">${rd.profile}</div></div>`;
+h+=`<div class="card kpi"><div class="label mono">Maturity</div><div style="font-size:15px;font-weight:700;color:${(rd.maturityLevel||"").includes("Senior")?"#10b981":(rd.maturityLevel||"").includes("II")?"#3b82f6":"#8b5cf6"}">${rd.maturityLevel||"—"}</div></div>`;
 h+=`</div>`;
 
 // ── COMPARE VIEW ──
@@ -133,7 +134,7 @@ if(st.view==="compare"&&!det){
 h+=`<div class="card" style="overflow-x:auto"><div class="mono" style="font-size:11px;font-weight:600;color:#93c5fd;margin-bottom:12px;letter-spacing:1px">REP COMPARISON</div><table><thead><tr><th>Metric</th>`;
 reps.forEach(r=>{h+=`<th style="text-align:center">${r.name.split(" ")[0]}</th>`});
 h+=`</tr></thead><tbody>`;
-[{l:"Avg Score",f:r=>r.avg},{l:"Calls",f:r=>r.n},{l:"Profile",f:r=>r.profile},{l:"Pillars %",f:r=>{const rc=calls.filter(c=>c.rep===r.id);const t=rc.length*4;const h2=rc.reduce((s,c)=>s+PK.filter(k=>c.p[k]).length,0);return t?Math.round(h2/t*100)+"%":"0%"}}].forEach(row=>{
+[{l:"Avg Score",f:r=>r.avg},{l:"Calls",f:r=>r.n},{l:"Profile",f:r=>r.profile},{l:"Maturity",f:r=>r.maturityLevel||"—"},{l:"Pillars %",f:r=>{const rc=calls.filter(c=>c.rep===r.id);const t=rc.length*4;const h2=rc.reduce((s,c)=>s+PK.filter(k=>c.p[k]).length,0);return t?Math.round(h2/t*100)+"%":"0%"}}].forEach(row=>{
 h+=`<tr><td style="color:#94a3b8">${row.l}</td>`;
 reps.forEach(r=>{const v=row.f(r);h+=`<td style="text-align:center;font-weight:${typeof v==="number"?700:400};color:${typeof v==="number"?sc(v):"#94a3b8"}">${v}</td>`});
 h+=`</tr>`;
@@ -262,6 +263,7 @@ h+=`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">`;
 PK.forEach(k=>{h+=`<div class="tag mono" style="background:${det.p[k]?"rgba(16,185,129,0.12)":"rgba(100,116,139,0.06)"};color:${det.p[k]?"#10b981":"#475569"};border:1px solid ${det.p[k]?"rgba(16,185,129,0.25)":"#1e293b"}">${k} <span style="font-size:8px;font-weight:400">${PL[k]}</span></div>`});
 h+=`</div>`;
 if(det.keyAreas&&det.keyAreas.length){h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:8px">`;const ac={Retention:"#10b981",Expansion:"#3b82f6",Advocacy:"#8b5cf6"};det.keyAreas.forEach(a=>{h+=`<span class="tag" style="background:${ac[a]||"#475569"}22;color:${ac[a]||"#475569"};border:1px solid ${ac[a]||"#475569"}44;font-size:10px">${a}</span>`});h+=`</div>`}
+if(det.ml){const mlc=det.ml.includes("Senior")?"#10b981":det.ml.includes("II")?"#3b82f6":"#8b5cf6";h+=`<div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="tag mono" style="background:${mlc}18;color:${mlc};border:1px solid ${mlc}33;font-size:10px;font-weight:600">${det.ml}</span>`;if(det.mls){h+=`<span style="font-size:11px;color:#64748b;font-style:italic">${det.mls}</span>`}h+=`</div>`}
 h+=`</div>`;
 h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0" class="detail-grid">`;
 h+=`<div class="card"><div class="mono" style="font-size:10px;font-weight:600;color:#10b981;margin-bottom:6px">STRENGTHS</div>`;
@@ -275,7 +277,7 @@ if(det.q){h+=`<div class="card"><div class="mono" style="font-size:10px;font-wei
 h+=`<a href="${det.url}" target="_blank" class="mono" style="font-size:10px;display:inline-block;margin-top:8px">View in Gong →</a>`;
 }
 
-h+=`<div style="margin-top:20px;text-align:center;font-size:9px;color:#1e293b" class="mono">AM Scorecard v1 · RQ 20% · CD 25% · VD 25% · SA 20% · CE 10% · ${calls.length} calls · ${reps.length} reps</div>`;
+h+=`<div style="margin-top:20px;text-align:center;font-size:9px;color:#1e293b" class="mono">AM Scorecard v1.1 · RQ 20% · CD 25% · VD 25% · SA 20% · CE 10% · ${calls.length} calls · ${reps.length} reps</div>`;
 el.innerHTML=h;
 }
 render();
