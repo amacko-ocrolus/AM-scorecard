@@ -26,16 +26,42 @@ The scorecard is updated weekly (typically Sundays) and shared with sales leader
 - Calls that ARE scored: regular client check-ins, QBRs/business reviews, escalations, onboarding calls, demos, support/troubleshooting, expansion discussions
 - Users endpoint paginates at 100 per page; all five reps are known IDs above
 
-## Scoring Framework (AM Scorecard v1)
+## Scoring Framework (AM Scorecard v1.1 — Career Pathing Integration)
 
-### Two-Layer Scoring Model
+### Foundation: Ocrolus AM Career Pathing Competency Model
 
-The AM Scorecard uses a two-layer approach:
-1. **Four Pillars of Success** — binary (yes/no) tracking per call (did it happen?)
-2. **Five Scoring Dimensions** — 1-10 scale per call (how well did the AM perform?)
+The scoring methodology is grounded in the Ocrolus AM Career Pathing document, which defines 6 competencies across 3 career levels (AM I → AM II → Senior AM). Each scoring dimension maps to a career competency with level-specific behavioral anchors.
 
-Plus:
+### Multi-Layer Scoring Model
+
+The AM Scorecard uses a multi-layer approach:
+1. **Five Scoring Dimensions** — 1-10 scale per call, anchored to AM career competencies
+2. **Four Pillars of Success** — binary (yes/no) tracking per call (did it happen?)
 3. **Three Key Areas** — tagged per call (which areas were advanced?)
+4. **AM Profile Classification** — behavioral style per call
+5. **Career Maturity Level** — AM I / AM II / Senior AM sophistication per call
+6. **Ocrolus Values Assessment** — Empathy, Curiosity, Humility, Ownership (scored but not displayed on dashboard)
+
+### Five Scoring Dimensions (1-10 scale)
+
+```
+Weighted Score = (Relationship Quality × 0.20) + (Client Discovery × 0.25) +
+                 (Value Delivery × 0.25) + (Strategic Advancement × 0.20) +
+                 (Client Engagement × 0.10)
+```
+
+| Dimension | Weight | Career Competency | What It Measures |
+|-----------|--------|-------------------|------------------|
+| Relationship Quality | 20% | Client Relationship Management | Rapport, trust, multi-threading, stakeholder awareness, advocacy cultivation |
+| Client Discovery | 25% | Client Retention | Client health, satisfaction, pain points, usage/volume patterns, churn signals |
+| Value Delivery | 25% | Subject Matter Expertise | ROI validation, industry knowledge, product knowledge, advising, best practices |
+| Strategic Advancement | 20% | Strategic Account Planning | Next steps, expansion, roadmap alignment, upsell/cross-sell, negotiation |
+| Client Engagement | 10% | — | Client energy, voluntary elaboration, positive signals, advocacy indicators |
+
+Each dimension uses career-level behavioral anchors for score calibration:
+- **AM I behaviors → scores 5-6**: Foundational execution, reactive, handles basics independently
+- **AM II behaviors → scores 7-8**: Strategic, proactive, anticipates needs, independent on most activities
+- **Senior AM behaviors → scores 9-10**: Multi-threaded strategy, executive influence, mentors peers, market expert
 
 ### Four Pillars of Success (Binary per Call)
 
@@ -48,25 +74,7 @@ Plus:
 
 Tracked as 1 (covered) or 0 (not covered) per call. Displayed as a heatmap across calls.
 
-### Five Scoring Dimensions (1-10 scale)
-
-```
-Weighted Score = (Relationship Quality × 0.20) + (Client Discovery × 0.25) +
-                 (Value Delivery × 0.25) + (Strategic Advancement × 0.20) +
-                 (Client Engagement × 0.10)
-```
-
-| Dimension | Weight | What It Measures |
-|-----------|--------|------------------|
-| Relationship Quality | 20% | Rapport, trust signals, multi-threading, stakeholder awareness, tactical empathy |
-| Client Discovery | 25% | Uncovering client health, satisfaction, pain points, usage patterns, business changes |
-| Value Delivery | 25% | ROI validation, demonstrating ongoing value, teaching/advising, best practice sharing |
-| Strategic Advancement | 20% | Next steps, action items, expansion signals, roadmap alignment, mutual planning |
-| Client Engagement | 10% | Client energy, voluntary elaboration, positive signals, advocacy indicators |
-
 ### Three Key Areas (Tags per Call)
-
-Each call is tagged with which areas were actively advanced:
 
 | Area | Color | What It Means on a Call |
 |------|-------|------------------------|
@@ -78,11 +86,34 @@ Each call is tagged with which areas were actively advanced:
 
 | Profile | Description |
 |---------|-------------|
-| Trusted Advisor | Deep strategic relationship, proactive guidance, client views AM as partner |
+| Trusted Advisor | Proactive guidance, strategic insights, positioned as partner, client seeks AM's opinion |
 | Relationship Builder | Strong rapport, responsive, but may miss strategic/expansion opportunities |
-| Problem Solver | Excellent at reactive support, but doesn't proactively advance the account |
-| Account Grower | Strong expansion instincts, identifies opportunities, drives revenue growth |
-| Caretaker | Maintains status quo, keeps client satisfied but doesn't advance the relationship |
+| Problem Solver | Primarily reactive — resolves issues but doesn't proactively advance the account |
+| Account Grower | Actively pursues expansion — new use cases, volume growth, cross-sell, upsell |
+| Caretaker | Maintains status quo, routine check-ins, no meaningful forward momentum |
+
+### Career Maturity Level (New in v1.1)
+
+Per-call assessment of AM behavioral sophistication, mapped to the AM Career Pathing levels:
+
+| Level | What It Looks Like on a Call |
+|-------|------------------------------|
+| AM I | Executes core activities, foundational knowledge, handles basics independently, reactive |
+| AM II | Anticipates needs, strategic account plans, independent negotiations, connects product to outcomes |
+| Senior AM | Multi-threaded strategies, executive relationships, translates insights to internal strategy, mentors |
+
+This reflects call-level behavior, not a performance evaluation of the person.
+
+### Ocrolus Values Assessment (New in v1.1)
+
+Scored per call but not displayed on dashboard (available for coaching/analysis):
+
+| Value | Observable Signals |
+|-------|-------------------|
+| Empathy | Tailored solutions, acknowledging frustrations, active listening, "I understand" language |
+| Curiosity | Open-ended questions, client-specific research, probing deeper, learning mindset |
+| Humility | Acknowledging unknowns, accepting feedback, not overselling, learning from client |
+| Ownership | Specific next steps with dates, volunteering to handle items, "I will..." language |
 
 ### Four Pillars Philosophy
 
@@ -106,8 +137,19 @@ Score **depth over breadth**. Pattern-level gaps (across multiple calls) matter 
 ### Epistemic Humility
 
 - AI has transcripts only — no tone, body language, account history, or relationship context
+- Call-level behaviors only — do not infer CRM hygiene, meeting frequency, or quantitative KPIs
 - Low-confidence feedback must be excluded
 - Use "the transcript shows" not "the AM felt"
+
+### What Is NOT Scored (Manager-Assessed Only)
+
+These career-pathing KPIs are not observable from transcripts:
+- Meeting frequency (1/month per client)
+- Testimonial quotas (1/quarter)
+- Forecast accuracy (within 12%)
+- Salesforce logging compliance
+- NRR numbers
+- In-person visit frequency
 
 ## Transcript Processing
 

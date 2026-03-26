@@ -36,7 +36,7 @@ const MIN_DURATION = 300; // 5 minutes minimum
 // Keeps: QBRs, escalations, onboarding, demos, support/troubleshooting, regular check-ins
 const EXCLUDE_TITLE_PATTERNS = /\b(training\s+session|internal\s+sync|team\s+sync|1[:\-]1|one[\-\s]on[\-\s]one|pipeline\s+review|handoff|hand[\-\s]off|transition\s+call|POV|proof\s+of\s+value|pilot\s+review|pilot\s+call|trial\s+eval|kickoff|kick[\-\s]off)/i;
 
-// AM Scorecard v1 — Two-Layer Scoring Model
+// AM Scorecard v1.1 — Career Pathing Competency Model
 // Layer 1: Five Scoring Dimensions (1-10 scale)
 //   Weighted Score = (RQ × 0.20) + (CD × 0.25) + (VD × 0.25) + (SA × 0.20) + (CE × 0.10)
 // Layer 2: Four Pillars of Success (binary per call)
@@ -44,16 +44,43 @@ const EXCLUDE_TITLE_PATTERNS = /\b(training\s+session|internal\s+sync|team\s+syn
 // Layer 3: Three Key Areas (tags per call)
 //   Retention, Expansion, Advocacy
 
-const SCORING_PROMPT = `You are an expert Account Management coach evaluating a client call for an Ocrolus Account Manager. Use the AM Scorecard v1 methodology below.
+const SCORING_PROMPT = `You are an expert Account Management coach evaluating a client call for an Ocrolus Account Manager. Use the AM Scorecard v1.1 methodology below, grounded in the Ocrolus AM Career Pathing Competency Model.
 
-## Two-Layer Scoring Model
+## Scoring Methodology — Ocrolus AM Competency Model
 
 ### Five Scoring Dimensions (1-10 scale)
-- Relationship Quality (20% weight): Rapport, trust signals, multi-threading, stakeholder awareness, tactical empathy
-- Client Discovery (25% weight): Uncovering client health, satisfaction, pain points, usage patterns, business changes
-- Value Delivery (25% weight): ROI validation, demonstrating ongoing value, teaching/advising, best practice sharing
-- Strategic Advancement (20% weight): Next steps, action items, expansion signals, roadmap alignment, mutual planning
-- Client Engagement (10% weight): Client energy, voluntary elaboration, positive signals, advocacy indicators
+
+Each dimension maps to an AM career competency. Use the behavioral anchors below to calibrate scores — they describe what "good" looks like at each career level.
+
+**1. Relationship Quality (20% weight) — maps to: Client Relationship Management**
+Rapport, trust signals, multi-threading, stakeholder awareness, tactical empathy, advocacy cultivation.
+- AM I behaviors (score 5-6): Builds rapport and keeps client engaged. Responsive to client needs. Follows up on action items. Building client champions.
+- AM II behaviors (score 7-8): Deepens relationships to influence client decisions. Leverages rapport to advise on workflows and business goals. Builds client advocates who champion Ocrolus internally and externally.
+- Senior AM behaviors (score 9-10): Scales influence across multiple key stakeholders. Client seeks the AM's opinion on strategic business decisions. Mentors others on relationship depth.
+
+**2. Client Discovery (25% weight) — maps to: Client Retention**
+Uncovering client health, satisfaction, pain points, usage patterns, volume trends, churn signals, business changes.
+- AM I behaviors (score 5-6): Asks about volume and usage. Identifies basic workflow blockers. Pushes to maximize volume through training/enablement.
+- AM II behaviors (score 7-8): Uses client and market trends to forecast strategically. Identifies potential churn risks and proactively explores retention strategies. Connects volume patterns to business context.
+- Senior AM behaviors (score 9-10): Anticipates fluctuations before the client raises them. Connects health signals to strategic recommendations. Achieves continuous discovery that drives growth.
+
+**3. Value Delivery (25% weight) — maps to: Subject Matter Expertise**
+ROI validation, demonstrating ongoing value, teaching/advising, industry knowledge, product knowledge, best practice sharing.
+- AM I behaviors (score 5-6): Shares product updates with clients. Resolves simple issues and escalates appropriately. Demonstrates foundational product and vertical knowledge.
+- AM II behaviors (score 7-8): Leverages in-depth industry and market knowledge to advise clients. Trusted by clients to share relevant trends. Applies Ocrolus intel and client usage data to drive creative solutions.
+- Senior AM behaviors (score 9-10): Applies extensive industry knowledge to develop high-level strategies. Foresees market trend impacts on clients and integrates into conversations. Seen as a market expert. Contributes insights beyond their own book of business.
+
+**4. Strategic Advancement (20% weight) — maps to: Strategic Account Planning**
+Next steps, action items, expansion signals, roadmap alignment, upsell/cross-sell, mutual planning, negotiation.
+- AM I behaviors (score 5-6): Creates basic account plans. Identifies upsell opportunities with support. Handles simple renewals and upsells independently. Gets next steps agreed upon.
+- AM II behaviors (score 7-8): Builds and executes strategic roadmaps for accounts. Seen as a trusted advisor to the client's business. Identifies and executes expansion opportunities (volume, use cases, higher-in-funnel). Handles most negotiations independently. Articulates how the Product roadmap fits client workflows.
+- Senior AM behaviors (score 9-10): Fully independent strategic roadmaps. Leverages relationships to drive early adoption of new features. Independently handles complex negotiations with intent to expand. Provides strategic input that shapes internal product decisions.
+
+**5. Client Engagement (10% weight)**
+Client energy, voluntary elaboration, positive signals, advocacy indicators.
+- Low (score 1-4): Client gives short, transactional responses. Minimal voluntary sharing.
+- Medium (score 5-7): Client is cooperative, asks some questions, shares relevant context.
+- High (score 8-10): Client is enthusiastic, volunteers information, expresses advocacy ("we love Ocrolus"), invites deeper discussion.
 
 ### Four Pillars of Success (binary — did it happen on this call?)
 - KDM (Key Decision Maker): Was the call held with someone who has authority over budget, renewal, or strategic direction?
@@ -75,6 +102,18 @@ Note: AMs should cover 2-3 pillars per call based on the client relationship sta
 - Account Grower: The AM actively pursued expansion — new use cases, volume growth, cross-sell, or upsell. Look for: the AM introducing new Ocrolus capabilities, asking about adjacent workflows, quantifying growth potential, or discussing pricing/packaging for additional services.
 - Caretaker: The AM maintained status quo — the call was a routine check-in with no meaningful discovery, no value articulation, and no forward momentum. Look for: short, surface-level conversations, generic "everything good?" questions, no concrete next steps.
 
+### Career Maturity Level (assess the sophistication of AM behavior on THIS call)
+Based on the behavioral anchors in the scoring dimensions above, assess which career level the AM's behavior reflects on this specific call. This is about the call, not the person — a senior AM can have a routine AM I-level check-in.
+- AM I: Executes core activities, foundational product/industry knowledge, handles basics independently, needs support on complex situations. Reactive more than proactive.
+- AM II: Anticipates client needs, crafts strategic account plans, independently manages renewals/negotiations, connects product capabilities to client outcomes, influences cross-functional decisions.
+- Senior AM: Leads multi-threaded account strategies, navigates executive relationships, translates client insights into internal strategy input, sets the standard for client excellence, mentors peers.
+
+### Ocrolus Values Assessment (assess each value based on observable call behaviors)
+- Empathy: Understanding client needs, offering tailored solutions, acknowledging frustrations, active listening, "I understand" language, treating the client's concerns as important.
+- Curiosity: Asking open-ended discovery questions, referencing client-specific research/context, probing deeper on answers, learning mindset, not settling for surface-level answers.
+- Humility: Acknowledging unknowns ("let me find out"), accepting feedback gracefully, not overselling, embracing challenges, learning from the client.
+- Ownership: Setting specific next steps with dates, volunteering to handle items personally, following up on prior commitments, "I will..." language, working through challenges rather than deflecting.
+
 ## Coaching Principles
 - Keep/Start/Stop = ONE item each — the single highest-impact action, not a list
 - No rep name openers — don't start coaching with the AM's name, get straight to the point
@@ -85,6 +124,7 @@ Note: AMs should cover 2-3 pillars per call based on the client relationship sta
 
 ## Epistemic Humility Rules
 - You have transcripts only — no tone, body language, account history, or relationship context
+- You are assessing call-level behaviors only — do not infer CRM hygiene, meeting frequency, or quantitative KPIs
 - Exclude low-confidence feedback
 - Use "the transcript shows" not "the AM felt"
 
@@ -103,7 +143,15 @@ Respond ONLY with valid JSON, no markdown, no backticks:
   "talkRatio": N,
   "pillars": {"KDM": 0or1, "CS": 0or1, "AV": 0or1, "PR": 0or1},
   "keyAreas": ["Retention" and/or "Expansion" and/or "Advocacy"],
-  "profile": "Trusted Advisor|Relationship Builder|Problem Solver|Account Grower|Caretaker (pick the ONE that best describes the AM's dominant behavior on THIS call based on the classification criteria above)",
+  "profile": "Trusted Advisor|Relationship Builder|Problem Solver|Account Grower|Caretaker (pick the ONE that best describes the AM's dominant behavior on THIS call)",
+  "maturityLevel": "AM I|AM II|Senior AM (pick the ONE that best describes the sophistication of AM behavior on THIS call based on the career maturity criteria above)",
+  "maturitySignals": "1-2 sentence evidence for the maturity level assessment, citing specific call behaviors",
+  "values": {
+    "empathy": "high|medium|low",
+    "curiosity": "high|medium|low",
+    "humility": "high|medium|low",
+    "ownership": "high|medium|low"
+  },
   "strengths": ["specific strength with evidence from the transcript", "second strength"],
   "opportunities": ["specific opportunity with coaching suggestion", "second opportunity"],
   "keyQuote": "notable client quote from the transcript or empty string",
@@ -262,7 +310,7 @@ ${processedTranscript.positiveSignals.join("\n")}`;
   try {
     const response = await client.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
+      max_tokens: 2500,
       temperature: 0,
       messages: [{ role: "user", content: prompt }],
     });
@@ -307,6 +355,9 @@ async function injectDashboardData(repResults, weekLabel, client) {
       coach: c.score?.coaching || "",
       prep: c.score?.nextCallPrep || [],
       url: c.url,
+      ml: c.score?.maturityLevel || "",
+      mls: c.score?.maturitySignals || "",
+      val: c.score?.values || { empathy: "", curiosity: "", humility: "", ownership: "" },
     }));
 
     allCalls.push(...repCalls);
@@ -320,6 +371,7 @@ async function injectDashboardData(repResults, weekLabel, client) {
       name: rep.name,
       title: rep.title,
       profile: rep.calls.length > 0 ? mostCommon(rep.calls.map(c => c.score?.profile).filter(Boolean)) : "",
+      maturityLevel: rep.calls.length > 0 ? mostCommon(rep.calls.map(c => c.score?.maturityLevel).filter(Boolean)) : "",
       avg,
       n: repCalls.length,
     });
@@ -333,6 +385,9 @@ async function injectDashboardData(repResults, weekLabel, client) {
     const narratives = rep.calls.map(c => c.score?.narrative || "").filter(Boolean);
     const coachingNotes = rep.calls.map(c => c.score?.coaching || "").filter(Boolean);
     const pillarNotes = rep.calls.map(c => c.score?.pillarCoaching || "").filter(Boolean);
+    const maturityLevels = rep.calls.map(c => c.score?.maturityLevel || "").filter(Boolean);
+    const maturitySignals = rep.calls.map(c => c.score?.maturitySignals || "").filter(Boolean);
+    const valuesData = rep.calls.map(c => c.score?.values).filter(Boolean);
 
     let weekSummary = `${rep.name} had ${rep.calls.length} qualifying calls this week.`;
 
@@ -354,7 +409,11 @@ ${narratives.map((n, i) => `Call ${i + 1}: ${n}`).join("\n")}
 Per-call coaching:
 ${coachingNotes.map((c, i) => `Call ${i + 1}: ${c}`).join("\n")}
 
-Respond with ONLY the summary paragraph, no JSON, no markdown.` }],
+Career maturity levels observed: ${maturityLevels.join(", ") || "N/A"}
+${maturitySignals.length > 0 ? `Maturity signals:\n${maturitySignals.map((s, i) => `Call ${i + 1}: ${s}`).join("\n")}` : ""}
+${valuesData.length > 0 ? `Values patterns: ${JSON.stringify(valuesData)}` : ""}
+
+When relevant, weave in observations about career maturity patterns and values demonstrated. Respond with ONLY the summary paragraph, no JSON, no markdown.` }],
         });
         weekSummary = synthResponse.content[0]?.text?.trim() || weekSummary;
       } catch (e) {
@@ -502,7 +561,7 @@ function buildSlackMessage(repsData, allCalls) {
 
   sorted.forEach((r, i) => {
     const best = allCalls.filter(c => c.rep === r.id).sort((a, b) => b.w - a.w)[0];
-    msg += `${medals[i] || ""} *${r.name}* — ${r.n} calls — Avg *${r.avg}* — _${r.profile}_\n`;
+    msg += `${medals[i] || ""} *${r.name}* — ${r.n} calls — Avg *${r.avg}* — _${r.profile}_ · ${r.maturityLevel || "—"}\n`;
   });
 
   msg += `\n---\n\n*Top Calls*\n\n`;
