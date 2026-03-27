@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ocrolus Weekly Call Scorecard</title>
+<title>AM Weekly Scorecard</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -126,7 +126,7 @@ h+=`<div class="card kpi"><div class="label mono">Avg Score</div><div style="fon
 h+=`<div class="card kpi"><div class="label mono">Best Call</div><div style="font-size:24px;font-weight:700;color:${best?sc(best.w):"#475569"}">${best?best.w:"—"}</div></div>`;
 h+=`<div class="card kpi"><div class="label mono">Calls</div><div style="font-size:24px;font-weight:700;color:#8b5cf6">${f.length}</div></div>`;
 h+=`<div class="card kpi"><div class="label mono">Profile</div><div style="font-size:15px;font-weight:700;color:#f59e0b">${rd.profile}</div></div>`;
-h+=`<div class="card kpi"><div class="label mono">Maturity</div><div style="font-size:15px;font-weight:700;color:${(rd.maturityLevel||"").includes("Senior")?"#10b981":(rd.maturityLevel||"").includes("II")?"#3b82f6":"#8b5cf6"}">${rd.maturityLevel||"—"}</div></div>`;
+h+=`<div class="card kpi"><div class="label mono">Call Level</div><div style="font-size:15px;font-weight:700;color:${(rd.maturityLevel||"").includes("Senior")?"#10b981":(rd.maturityLevel||"").includes("II")?"#3b82f6":"#8b5cf6"}">${rd.maturityLevel||"—"}</div></div>`;
 h+=`</div>`;
 
 // ── COMPARE VIEW ──
@@ -134,7 +134,7 @@ if(st.view==="compare"&&!det){
 h+=`<div class="card" style="overflow-x:auto"><div class="mono" style="font-size:11px;font-weight:600;color:#93c5fd;margin-bottom:12px;letter-spacing:1px">REP COMPARISON</div><table><thead><tr><th>Metric</th>`;
 reps.forEach(r=>{h+=`<th style="text-align:center">${r.name.split(" ")[0]}</th>`});
 h+=`</tr></thead><tbody>`;
-[{l:"Avg Score",f:r=>r.avg},{l:"Calls",f:r=>r.n},{l:"Profile",f:r=>r.profile},{l:"Maturity",f:r=>r.maturityLevel||"—"},{l:"Pillars %",f:r=>{const rc=calls.filter(c=>c.rep===r.id);const t=rc.length*4;const h2=rc.reduce((s,c)=>s+PK.filter(k=>c.p[k]).length,0);return t?Math.round(h2/t*100)+"%":"0%"}}].forEach(row=>{
+[{l:"Avg Score",f:r=>r.avg},{l:"Calls",f:r=>r.n},{l:"Profile",f:r=>r.profile},{l:"Call Level",f:r=>r.maturityLevel||"—"},{l:"Pillars %",f:r=>{const rc=calls.filter(c=>c.rep===r.id);const t=rc.length*4;const h2=rc.reduce((s,c)=>s+PK.filter(k=>c.p[k]).length,0);return t?Math.round(h2/t*100)+"%":"0%"}}].forEach(row=>{
 h+=`<tr><td style="color:#94a3b8">${row.l}</td>`;
 reps.forEach(r=>{const v=row.f(r);h+=`<td style="text-align:center;font-weight:${typeof v==="number"?700:400};color:${typeof v==="number"?sc(v):"#94a3b8"}">${v}</td>`});
 h+=`</tr>`;
