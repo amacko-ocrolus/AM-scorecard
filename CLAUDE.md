@@ -134,6 +134,18 @@ Score **depth over breadth**. Pattern-level gaps (across multiple calls) matter 
 - **Specific call references** — coaching must cite actual call moments, not generic advice. Reference what the client said and suggest a specific alternative phrase or question the AM could have used
 - **Multi-call patterns > single-call gaps** — one missed dimension on one call doesn't matter; the same gap across multiple calls is the coaching moment
 
+### Pillar Coaching Format
+
+The `pillarCoaching` field must be **1-2 paragraphs** of synthesized, actionable insights — not per-call notes. Each week, analyze pillar coverage across all of a rep's calls and generate a concise summary that:
+
+- Identifies which pillars are **consistently missed** and which are **consistently covered** across the week's calls
+- Provides **1-2 specific, actionable suggestions** with example questions or phrases the AM could use to address their pillar gaps
+- If prior week data is available, notes whether the rep is **improving or regressing** on pillar coverage
+- Follows the same coaching principles above: executive gravitas, no name openers, cite specific call moments only when illustrating a pattern
+- Reads as a brief coaching talking point a manager can reference in a 1:1, not a transcript audit
+
+Do **not** produce per-call pillar notes. The output should be a pattern-level synthesis that a reader can absorb in under 30 seconds.
+
 ### Epistemic Humility
 
 - AI has transcripts only — no tone, body language, account history, or relationship context
