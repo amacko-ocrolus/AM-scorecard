@@ -428,8 +428,39 @@ When relevant, weave in observations about career maturity patterns and values d
       keep: strengths[0] || "No data this week.",
       start: opps[0] || "No data this week.",
       stop: opps[1] || "Review needed.",
-      pillarCoaching: pillarNotes.join("<br>") || "",
+      pillarCoaching: "",  // Synthesized below
     };
+
+    // Synthesize pillar coaching into 4-6 sentences (3rd person, actionable)
+    if (pillarNotes.length > 0) {
+      try {
+        console.log(`   Synthesizing pillar coaching for ${rep.name}...`);
+        const pillarResponse = await client.messages.create({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 400,
+          temperature: 0,
+          messages: [{ role: "user", content: `You are writing a concise pillar coaching summary for a sales leadership dashboard. Synthesize these per-call Four Pillars coaching notes into ONE paragraph of 4-6 sentences.
+
+Rules:
+- Write in 3rd person (e.g., "${rep.name} should..." not "You should...")
+- Focus on the 1-2 most important pattern-level gaps across the week's calls
+- Include 1-2 specific, actionable things to work on next week
+- Reference a specific call moment only if it illustrates the pattern
+- Keep it concise and direct — this is for a manager to discuss in a 1:1
+
+Rep: ${rep.name} (${rep.calls.length} calls this week)
+
+Per-call pillar coaching notes:
+${pillarNotes.map((n, i) => `Call ${i + 1}: ${n}`).join("\n\n")}
+
+Respond with ONLY the 4-6 sentence paragraph, no headers or formatting.` }],
+        });
+        coaching[rep.repId].pillarCoaching = pillarResponse.content[0]?.text?.trim() || "";
+      } catch (e) {
+        console.error(`   Pillar coaching synthesis failed for ${rep.name}: ${e.message}`);
+        coaching[rep.repId].pillarCoaching = pillarNotes[0] || "";
+      }
+    }
   }
 
   // Load existing history and append this week
